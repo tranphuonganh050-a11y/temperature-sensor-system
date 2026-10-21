@@ -1,0 +1,1 @@
+SHIPMENT|1001|Bui Nhat Linh|Nguyen Van A|Boboboi|IN_TRANSIT
