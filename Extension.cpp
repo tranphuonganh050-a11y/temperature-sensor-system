@@ -12,18 +12,25 @@ class AuditReportExporter{
     public: 
         static bool exportToCSV(const vector<ShipmentDTO>& history, const string& filename = "ColdChain_Compliance_Report.csv"){
             ofstream outFile(filename);
-            if(!outFile.is_open()) return false; 
-            outFile << "Ma lo hang, Ten san pham, Trang thai, Nhiet do cuoi, So lan vi pham, Vi tri\n";
-            for(const auto& item : history){
-                    outFile << item.getShipmentId() << ","
-                            << "\"" << item.getProductName() << "\","
-                    << item.getStatus() << ","
-                    << item.getLastRecordedTemp() << ","
-                    << item.getViolationCount() << ","
-                    << "\"" << item.getLastLocation().getLatitude() << ", " << item.getLastLocation().getLongitude() << "\"\n";
+            if(!outFile.is_open()) return false;
+            auto csvEscape = [](const string& value) {
+                string escaped;
+                for (char ch : value) {
+                    if (ch == '\"') escaped += '\"';
+                    escaped += ch;
                 }
-            outFile.close();
-            return true; 
+                return string("\"") + escaped + "\"";
+            };
+            outFile << "Ma lo hang,Ten san pham,Trang thai,Nhiet do cuoi,So lan vi pham,Vi tri\n";
+            for(const auto& item : history){
+                outFile << item.getShipmentId() << ","
+                        << csvEscape(item.getProductName()) << ","
+                        << item.getStatus() << ","
+                        << item.getLastRecordedTemp() << ","
+                        << item.getViolationCount() << ","
+                        << csvEscape(to_string(item.getLastLocation().getLatitude()) + ", " + to_string(item.getLastLocation().getLongitude())) << "\n";
+            }
+            return outFile.good(); 
         }
 };
 
@@ -90,9 +97,13 @@ class DashboardView{
         cout << "Upper Limit: " << maxSafe << " C | Lower Limit: " << minSafe << " C" << endl;
         cout << "Nhiet do hien tai: " << currentTemp << " C  -> Graph: [";
         
-        int barLength = static_cast<int>(currentTemp * 2);
-        if (barLength < 0) barLength = 0;
-        if (barLength > 40) barLength = 40;
+        int barLength = 0;
+        if (maxSafe > minSafe) {
+            const float normalized = (currentTemp - minSafe) / (maxSafe - minSafe);
+            barLength = static_cast<int>(normalized * 40.0f + 0.5f);
+            if (barLength < 0) barLength = 0;
+            if (barLength > 40) barLength = 40;
+        }
 
         bool isViolation = (currentTemp < minSafe || currentTemp > maxSafe);
         string color = isViolation ? "\033[31m" : "\033[32m";

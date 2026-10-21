@@ -52,26 +52,20 @@ private:
     float lastRecordedTemp;
     int violationCount;
     Location lastLocation; 
-    float minTemp;
-    float maxTemp; 
 
 public:
     ShipmentDTO() {
         lastRecordedTemp = 0.0f;
         violationCount = 0;
-        minTemp = 0.0f; 
-        maxTemp = 0.0f; 
     }
 
-    ShipmentDTO(int id, string prod, string st, float lastTemp, int violations, Location loc = Location(), float minT= 0.0f, float maxT = 0.0f) {
+    ShipmentDTO(int id, string prod, string st, float lastTemp, int violations, Location loc = Location()) {
         shipmentId = id;
         productName = prod;
         status = st;
         lastRecordedTemp = lastTemp;
         violationCount = violations;
         lastLocation = loc; 
-        minTemp = minT; 
-        maxTemp = maxT; 
     }
 
     int getShipmentId() const { return shipmentId; }
@@ -80,8 +74,6 @@ public:
     float getLastRecordedTemp() const { return lastRecordedTemp; }
     int getViolationCount() const { return violationCount; }
     Location getLastLocation() const {return lastLocation;}
-    float getMinTemp() const {return minTemp;}
-    float getMaxTemp() const {return maxTemp;}
 };
 
 // Publisher quản lý danh sách Observers và phát sự kiện
@@ -118,6 +110,15 @@ public:
 
     // 1. Nghiệp vụ: Tạo lô hàng mới từ DTO
     int createShipment(const CreateShipmentDTO& dto) {
+        if (dto.getMinTemp() > dto.getMaxTemp()) {
+            throw invalid_argument("Nhiet do toi thieu khong duoc lon hon nhiet do toi da.");
+        }
+        if (dto.getContainerId() <= 0) {
+            throw invalid_argument("Container ID phai la so duong.");
+        }
+        if (dto.getProductName().empty() || dto.getSender().empty() || dto.getReceiver().empty()) {
+            throw invalid_argument("Ten san pham, nguoi gui va nguoi nhan khong duoc de trong.");
+        }
         // Tạo Value Object & Entity con thuộc Domain
         TemperatureRange tempRange(dto.getMinTemp(), dto.getMaxTemp());
         ColdContainer container(dto.getContainerId(), "Standard-Model", tempRange);
@@ -173,6 +174,17 @@ public:
         shipmentRepo->save(*shipment);
     }
 
+    // Tra cứu khoảng nhiệt độ an toàn theo đúng lô hàng đang được mô phỏng.
+    bool getTemperatureRange(int shipmentId, float& minTemp, float& maxTemp) {
+        if (shipmentRepo == nullptr) return false;
+        Shipment* shipment = shipmentRepo->findById(shipmentId);
+        if (shipment == nullptr) return false;
+        const TemperatureRange range = shipment->getContainer().getTempRange();
+        minTemp = range.getMin();
+        maxTemp = range.getMax();
+        return true;
+    }
+
     // 3. Nghiệp vụ: Lấy lịch sử tất cả lô hàng để hiển thị ra UI (Chuyển đổi Entity sang DTO)
     vector<ShipmentDTO> getShipmentHistory() {
         vector<ShipmentDTO> dtoList;
@@ -193,15 +205,9 @@ public:
             }
 
             int violationCount = static_cast<int>(shipment.getViolations().size());
-            float lastTemp = 0.0f;
-            Location lastLoc; 
-            
-            if (violationCount > 0){
-                lastTemp = shipment.getViolations().back().getRecordedTemp();
-                lastLoc = shipment.getViolations().back().getLocation();
-            }
-
-            TemperatureRange range = shipment.getContainer().getTempRange();
+            // Lấy dữ liệu của lần đo mới nhất, không chỉ lần vi phạm gần nhất.
+            float lastTemp = shipment.hasReading() ? shipment.getLastRecordedTemp() : 0.0f;
+            Location lastLoc = shipment.hasReading() ? shipment.getLastLocation() : Location();
 
             ShipmentDTO dto(
                 shipment.getShipmentId(),
@@ -209,9 +215,7 @@ public:
                 statusStr,
                 lastTemp,
                 violationCount,
-                lastLoc,
-                range.getMin(), 
-                range.getMax()
+                lastLoc
             );
 
             dtoList.push_back(dto);
