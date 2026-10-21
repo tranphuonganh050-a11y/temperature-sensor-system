@@ -172,7 +172,7 @@ public:
         
             try
             {   
-                bool isViolated = (temp < minSafe || temp > maxSafe);
+                bool isViolated = (temp < minSafe || temp > maxSafe || scenario != SimulationScenario::NORMAL);
                 // Gọi Application xử lý dữ liệu và bắn cảnh báo vi phạm
                 if(isViolated){
                     shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
@@ -180,7 +180,7 @@ public:
                 cout << "| Mock: " << step << endl; 
                 cout << "| Event: " << scenarioName << endl;
                 if(isViolated){
-                    cout << "\033[31m[WARNING !!!]\033[0m"; 
+                    cout << "\033[31m[WARNING !!!]\033[0m" << endl; 
                 }
                 cout << "| Nhiet do do duoc hien tai : " << fixed << setprecision(1) << temp << " do C" << endl;
                 cout << "| Ma lo hang               : " << maHang << endl;
