@@ -177,15 +177,16 @@ public:
                 if(isViolated){
                     shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
                 }
-                else{
-                cout << "| Canh bao lan: " << step << endl; 
+                cout << "| Mock: " << step << endl; 
                 cout << "| Event: " << scenarioName << endl;
+                if(isViolated){
+                    cout << "\033[31m[WARNING !!!]\033[0m"; 
+                }
                 cout << "| Nhiet do do duoc hien tai : " << fixed << setprecision(1) << temp << " do C" << endl;
                 cout << "| Ma lo hang               : " << maHang << endl;
                 cout << "| Toa do xe                : Lat " << loc.getLatitude() << ", Lon " << loc.getLongitude() << endl;
                 cout << "| Thoi gian do             : " << timestamp << endl;
                 cout << "--------------------------------------------------\n";
-            }
             }
             catch (const exception& e)
             {
