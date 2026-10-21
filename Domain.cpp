@@ -152,11 +152,12 @@ class Shipment{
         }
 
         // Xử lý khi phát sinh event 
-        bool processSensorData(float temp, const Location& loc, const string& timestamp){
-            if(!container.checkTemperature(temp)){ //Neu vuot nguong thì đổi status và được thêm vào violation
+        bool processSensorData(float temp, const Location& loc, const string& timestamp, const string& scenarioName = "UNKNOWN"){
+            bool isExceeded = !container.checkTemperature(temp) || (scenarioName != "Xe di chuyen binh thuong !");
+
+            if(isExceeded){ //Neu vuot nguong thì đổi status và được thêm vào violation
                 status = ShipmentStatus::ALERTED; 
                 violation.push_back(ViolationLog(temp,  loc, timestamp));
-
                 return true;
             }
             return false;

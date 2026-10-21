@@ -148,7 +148,7 @@ public:
         }
 
         // B2: Gọi domain logic xử lý dữ liệu cảm biến
-        bool isExceeded = shipment->processSensorData(temp, loc, time);
+        bool isExceeded = shipment->processSensorData(temp, loc, time, scenarioName);
 
         // B3: Kiểm tra nếu có vi phạm mới bùng phát -> Phát Domain Event ra ngoài
         if (isExceeded) {
