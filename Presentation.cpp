@@ -178,12 +178,13 @@ public:
                     shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
                 }
                 cout << "| Mock: " << step << endl; 
+                cout << "| Ma lo hang               : " << maHang << endl;
                 cout << "| Event: " << scenarioName << endl;
                 if(isViolated){
                     cout << "\033[31m!WARNING!\033[0m" << endl; 
                 }
                 cout << "| Nhiet do do duoc hien tai : " << fixed << setprecision(1) << temp << " do C" << endl;
-                cout << "| Ma lo hang               : " << maHang << endl;
+                cout << "| Nhiet do cho phep        : " << fixed << setprecision(1) << minSafe << " - " << maxSafe << " do C" << endl; 
                 cout << "| Toa do xe                : Lat " << loc.getLatitude() << ", Lon " << loc.getLongitude() << endl;
                 cout << "| Thoi gian do             : " << timestamp << endl;
                 cout << "--------------------------------------------------\n";

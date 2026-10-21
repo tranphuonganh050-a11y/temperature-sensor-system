@@ -10,6 +10,7 @@ using namespace std;
 // Xuất báo cáo dạng excel/csv
 class AuditReportExporter{
     public: 
+    // Xuất file csv gốc làm bộ đệm 
         static bool exportToCSV(const vector<ShipmentDTO>& history, const string& filename = "ColdChain_Compliance_Report.csv"){
             ofstream outFile(filename);
             if(!outFile.is_open()) return false; 
@@ -24,6 +25,34 @@ class AuditReportExporter{
                 }
             outFile.close();
             return true; 
+        }
+        //Xuất dạng excel 
+        static bool exportToExcel(const vector<ShipmentDTO>& history, const vector<TemperatureExceededEvent>& alertLogs ={}){
+            // ghi data vi pham ra file tam 
+            ofstream vFile("temp_violations.txt");
+            if(vFile.is_open()){
+                for(const auto& ev : alertLogs){
+                    vFile << ev.getShipmentId() << "|"
+                        << ev.getTimestamp() << "|"
+                        << ev.getExceededTemp() << "|"
+                        << "Lat " << ev.getLocation().getLatitude() << ", Lon " << ev.getLocation().getLongitude() << "\n";
+                }
+                vFile.close(); 
+            }
+            // ghi data lo hang ra file tam 
+            ofstream sFile("temp_shipments.txt");
+            if(sFile.is_open()){
+                for(const auto& item : history){
+                    sFile << item.getShipmentId() << "|"
+                          << item.getProductName() << "|"
+                          << item.getStatus() << "|"
+                          << item.getViolationCount() << "|"
+                          << "Lat " << item.getLastLocation().getLatitude() << ", Lon " << item.getLastLocation().getLongitude() << "\n";
+                }
+                sFile.close();
+            }
+            // chuyen doi thanh Excel 
+            
         }
 };
 
