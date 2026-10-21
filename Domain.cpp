@@ -120,15 +120,19 @@ class Shipment{
         string receiver; 
         ShipmentStatus status; 
         ColdContainer container; 
-        vector<ViolationLog> violation; 
+        vector<ViolationLog> violation;
+        float lastRecordedTemp = 0.0f;
+        Location lastLocation;
+        string lastTimestamp;
+        bool hasSensorReading = false;
     public:
         Shipment(int id=0, const string& name="", const string& send="", const string& rcv="", const ColdContainer& con=ColdContainer(), ShipmentStatus st=ShipmentStatus::CREATED){
-            shipmentId = id; 
-            productName = name; 
+            shipmentId = id;
+            productName = name;
             sender = send;
             receiver = rcv;
-            container = con; 
-            status = st; 
+            container = con;
+            status = st;
         }
         int getShipmentId() const {return shipmentId;}
         string getProductName() const {return productName;}
@@ -137,6 +141,10 @@ class Shipment{
         ShipmentStatus getStatus() const {return status;}
         const vector<ViolationLog>& getViolations() const {return violation;}
         const ColdContainer& getContainer() const {return container;}
+        float getLastRecordedTemp() const { return lastRecordedTemp; }
+        Location getLastLocation() const { return lastLocation; }
+        string getLastTimestamp() const { return lastTimestamp; }
+        bool hasReading() const { return hasSensorReading; }
         
         //cập nhật trạng thái khi lô hàng được tạo 
         void startTransit(){
@@ -153,12 +161,18 @@ class Shipment{
 
         // Xử lý khi phát sinh event 
         bool processSensorData(float temp, const Location& loc, const string& timestamp){
-            if(!container.checkTemperature(temp)){ //Neu vuot nguong thì đổi status và được thêm vào violation
-                status = ShipmentStatus::ALERTED; 
-                violation.push_back(ViolationLog(temp,  loc, timestamp));
+            // Lưu lần đo mới nhất dù nhiệt độ an toàn hay vi phạm.
+            lastRecordedTemp = temp;
+            lastLocation = loc;
+            lastTimestamp = timestamp;
+            hasSensorReading = true;
 
+            if(!container.checkTemperature(temp)){
+                status = ShipmentStatus::ALERTED;
+                violation.push_back(ViolationLog(temp, loc, timestamp));
                 return true;
             }
+            // ALERTED được giữ lại như dấu vết rằng lô hàng từng vi phạm.
             return false;
         }
 

@@ -76,7 +76,11 @@ public:
             switch (Luachon)
             {
                 case 1:
-                    handleCreateShipment();
+                    try {
+                        handleCreateShipment();
+                    } catch (const exception& e) {
+                        cout << "Khong the tao lo hang: " << e.what() << endl;
+                    }
                     break;
                 case 2:
                     handleRunSensorSimulation();
@@ -90,9 +94,9 @@ public:
                 case 4: {
                    bool isSuccess = AuditReportExporter::exportToCSV(shipmentService.getShipmentHistory());
                     if (isSuccess) {
-                        cout << "\nDa xuat bao cao: ColdChain_Compliance_Report.csv\n";
+                        cout << "\n>> [THANH CONG] Da xuat bao cao: ColdChain_Compliance_Report.csv\n";
                     } else {
-                        cout << "\nKhong the xuat file CSV!\n";
+                        cout << "\n>> [LOI] Khong the xuat file CSV!\n";
                     }
                     break;
                 }
@@ -119,99 +123,84 @@ public:
         cout << "Nguoi nhan: ";
         getline(cin, nhan);
         cout << "Thiet bi (Container ID): ";
-        cin >> thietBiId;
+        if (!(cin >> thietBiId)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            throw invalid_argument("Container ID phai la so nguyen.");
+        }
         cout << "Nhiet do an toan min (do C): ";
-        cin >> min;
+        if (!(cin >> min)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            throw invalid_argument("Nhiet do toi thieu khong hop le.");
+        }
         cout << "Nhiet do an toan max (do C): ";
-        cin >> max;
+        if (!(cin >> max)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            throw invalid_argument("Nhiet do toi da khong hop le.");
+        }
 
         CreateShipmentDTO donHangMoi(ten, gui, nhan, thietBiId, min, max);
         lastCreatedShipmentId = shipmentService.createShipment(donHangMoi);
         cout << "Tao lo hang thanh cong. Ma lo hang: " << lastCreatedShipmentId << endl; 
     }
 
-    // Mocking để tự động chạy nhiệt độ thay vì nhập vào
+    // Mo phong cam bien cho lo hang do nguoi dung chon.
     void handleRunSensorSimulation()
     {
-        int maHang;
-        cout << "Nhap ma lo hang muon mo phong: ";
-        cin >> maHang; 
+        int maHang = -1;
+        cout << "Nhap ma lo hang muon mo phong";
+        if (lastCreatedShipmentId != -1) cout << " (lo vua tao: " << lastCreatedShipmentId << ")";
+        cout << ": ";
+        if (!(cin >> maHang)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Ma lo hang khong hop le.\n";
+            return;
+        }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        
-       
-        auto history = shipmentService.getShipmentHistory();
-        bool exists = false; 
-        float minSafe = 0.0f, maxSafe = 0.0f; 
 
-        for(const auto& item : history){
-            if(item.getShipmentId() == maHang){
-                exists = true;
-                minSafe = item.getMinTemp(); 
-                maxSafe = item.getMaxTemp(); 
-                break; 
-            }
+        float minSafe = 0.0f, maxSafe = 0.0f;
+        if (!shipmentService.getTemperatureRange(maHang, minSafe, maxSafe)) {
+            cout << "Khong tim thay lo hang " << maHang << ". Hay tao lo hang truoc.\n";
+            return;
         }
-        if (!exists){
-            cout << "Khong tim thay lo hang ma: " << maHang << ". Vui long tao lo hang hoac kiem tra lai ma: \n ";
-            return; //Dừng chạy 
-        }
-        MockSensor sensor("Sensor-01");
-        int totalSteps = 6;
+
+        MockSensor sensor("Sensor-01", "Container-" + to_string(maHang), (minSafe + maxSafe) / 2.0f);
+        DashboardView dashboardView;
+        const int totalSteps = 6;
 
         cout << "\n==================================================" << endl;
         cout << "|              MO PHONG CAM BIEN IoT              |" << endl;
+        cout << "| Nguong an toan: " << minSafe << " den " << maxSafe << " do C" << endl;
         cout << "==================================================" << endl;
 
-        for (int step = 1; step <= totalSteps; ++step)
-        {
+        for (int step = 1; step <= totalSteps; ++step) {
             SimulationScenario scenario;
             float temp = sensor.readCurrentTemp(step, scenario, minSafe, maxSafe);
             string scenarioName = sensor.scenarioToString(scenario);
             Location loc = sensor.readCurrentLocation();
-            string timestamp = sensor.getCurrentTime(); 
-        
-            try
-            {   
-                bool isViolated = (temp < minSafe || temp > maxSafe);
-                // Gọi Application xử lý dữ liệu và bắn cảnh báo vi phạm
-                if(isViolated){
-                    shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
-                }
-                else{
-                cout << "| Canh bao lan: " << step << endl; 
-                cout << "| Event: " << scenarioName << endl;
-                cout << "| Nhiet do do duoc hien tai : " << fixed << setprecision(1) << temp << " do C" << endl;
-                cout << "| Ma lo hang               : " << maHang << endl;
-                cout << "| Toa do xe                : Lat " << loc.getLatitude() << ", Lon " << loc.getLongitude() << endl;
-                cout << "| Thoi gian do             : " << timestamp << endl;
-                cout << "--------------------------------------------------\n";
-            }
-            }
-            catch (const exception& e)
-            {
-                cout << "Exception: " << e.what() << endl;
+            string timestamp = sensor.getCurrentTime();
+            bool isSafe = (temp >= minSafe && temp <= maxSafe);
+            string color = isSafe ? "\033[32m" : "\033[31m";
+
+            try {
+                shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
+                cout << color;
+                cout << "| Buoc mo phong: " << step << endl;
+                cout << "| Su kien: " << scenarioName << endl;
+                cout << "| Nhiet do do duoc: " << fixed << setprecision(1) << temp << " do C" << endl;
+                cout << "| Ma lo hang: " << maHang << endl;
+                cout << "| Toa do xe: Lat " << loc.getLatitude() << ", Lon " << loc.getLongitude() << endl;
+                cout << "| Thoi gian do: " << timestamp << endl;
+                cout << "| Ket qua: " << (isSafe ? "BINH THUONG" : "CANH BAO") << endl;
+                cout << "\033[0m";
+                dashboardView.renderTimeSeriesChart(temp, minSafe, maxSafe);
+            } catch (const exception& e) {
+                cout << "LOI: " << e.what() << endl;
                 break;
             }
-            // phát sinh mỗi 2 giây 
             this_thread::sleep_for(chrono::seconds(2));
         }
-
-        cout << "HOAN THANH MO PHONG" << endl;
-
-        auto updateHistory = shipmentService.getShipmentHistory(); 
-        int violationCount = 0; 
-        for(const auto& item: updateHistory){
-            if(item.getShipmentId() == maHang){
-                violationCount = item.getViolationCount();
-                break; 
-            }
-        }
-            cout << "Lo hang " << maHang << " vi pham nhiet do " << violationCount << " lan" << endl; 
-        if(AuditReportExporter::exportToCSV(shipmentService.getShipmentHistory())){
-            cout << "Xuat file thanh cong!" << endl; 
-        }
-        else cout << "Loi xuat file" << endl; 
-        }
+        cout << "HOAN THANH MO PHONG !!!!!" << endl;
+    }
 };
 
 #endif 

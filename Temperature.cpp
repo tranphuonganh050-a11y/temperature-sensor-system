@@ -28,7 +28,7 @@ int main(){
     ConsoleMenu menu(shipmentService);
     menu.displayMainMenu(); 
 
-    cout << "\n======== KET XUAT BAO CAO VA DASHBOARD GIAM SAT ========\n";
+    cout << "\n======== KET XUAT BAO CAO & DASHBOARD GIAM SAT ========\n";
 
     // Khi cần xem danh sách cảnh báo (Alert Feed):
     alertFeedLogger.displayAlertFeed();
