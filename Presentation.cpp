@@ -184,7 +184,7 @@ public:
 
         for (int step = 1; step <= totalSteps; ++step)
         {
-            SimulationScenario scenario = sensor.planRun(totalSteps)[step - 1];
+            SimulationScenario scenario =  plan[step - 1];
             float temp = sensor.readCurrentTemp(scenario, minSafe, maxSafe);
             string scenarioName = sensor.scenarioToString(scenario);
             Location loc = sensor.readCurrentLocation();
