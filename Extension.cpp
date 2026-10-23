@@ -114,30 +114,4 @@ class AlertFeedLogger:public ITemperatureObserver{
         cout << "--------------------------------------------------------------------------\n" << endl;
         }
 };
-// View hien thi co mau sac
-class DashboardView{
-    public: 
-        void renderColorMap(const vector<ShipmentDTO>& list){
-            cout << "\n==================================================" << endl;
-        cout << "|      BAN DO DIEU PHOI TRANG THAI (COLOR MAP)   |" << endl;
-        cout << "==================================================" << endl;
-
-        for (const auto& item : list) {
-            bool isAlert = (item.getStatus() == "ALERTED" || item.getViolationCount() > 0);
-
-            // \033[31m: Đỏ | \033[32m: Xanh lá | \033[0m: Reset màu
-            string colorCode = isAlert ? "\033[31m" : "\033[32m";
-            string statusIcon = isAlert ? "[CANH BAO / MAT AN TOAN]" : "[AN TOAN / BINH THUONG]";
-
-            cout << colorCode
-                 << "| Xe/Container ID: " << item.getShipmentId() << " " << statusIcon << "\n"
-                 << "|   + San pham: " << item.getProductName() << "\n"
-                 << "|   + Toa do hien tai: (" << item.getLastLocation().getLatitude() << ", " << item.getLastLocation().getLongitude() << ")\n"
-                 << "|   + Nhiet do: " << item.getLastRecordedTemp() << " C\n"
-                 << "\033[0m";
-            cout << "--------------------------------------------------" << endl;
-        }
-    }
-
-};
 #endif 

@@ -192,10 +192,4 @@ class ShipmentAggregator: public ITemperatureObserver{
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
         }
 };
-class DashboardNotifier: public ITemperatureObserver{
-    public:
-        void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
-        }
-};
-
 #endif

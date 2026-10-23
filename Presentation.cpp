@@ -142,6 +142,7 @@ public:
         auto history = shipmentService.getShipmentHistory();
         bool exists = false; 
         string currentStatus = "";
+        string productName = ""; 
         float minSafe = 0.0f, maxSafe = 0.0f; 
 
         for(const auto& item : history){
@@ -175,6 +176,7 @@ public:
             string scenarioName = sensor.scenarioToString(scenario);
             Location loc = sensor.readCurrentLocation();
             string timestamp = sensor.getCurrentTime(); 
+            string productName = 
         
             try
             {   
@@ -185,6 +187,7 @@ public:
                 }
                 cout << "| Mock: " << step << endl; 
                 cout << "| Ma lo hang               : " << maHang << endl;
+                cout << "| Ten hang                 : " << productName << endl; 
                 cout << "| Event: " << scenarioName << endl;
                 if(isViolated){
                     cout << "\033[31mWARNING!\033[0m" << endl; 

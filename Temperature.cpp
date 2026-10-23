@@ -11,7 +11,6 @@ int main(){
     // Tao cac observer 
     AlertService alertService; 
     ShipmentAggregator aggregatorService; 
-    DashboardNotifier dashboardNotifier; 
     // Đăng ký thêm Feed Logger vào telemetryProcessor sẵn có
     AlertFeedLogger alertFeedLogger;
 
