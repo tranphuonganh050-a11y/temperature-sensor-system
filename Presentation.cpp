@@ -178,7 +178,7 @@ public:
         for (int step = 1; step <= totalSteps; ++step)
         {
             SimulationScenario scenario;
-            float temp = sensor.readCurrentTemp(step, scenario, minSafe, maxSafe);
+            float temp = sensor.readCurrentTemp(scenario, step);
             string scenarioName = sensor.scenarioToString(scenario);
             Location loc = sensor.readCurrentLocation();
             string timestamp = sensor.getCurrentTime(); 

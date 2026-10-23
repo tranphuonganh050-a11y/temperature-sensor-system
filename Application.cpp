@@ -21,6 +21,7 @@ private:
 public:
 
     CreateShipmentDTO() {
+        containerId = 0; 
         minTemp = 0.0f;
         maxTemp = 0.0f;
     }
@@ -46,7 +47,7 @@ public:
 // DTO dùng để trả dữ liệu thông tin lô hàng ra UI
 class ShipmentDTO {
 private:
-    int shipmentId;
+    int shipmentId = 0;
     string productName;
     string status;
     float lastRecordedTemp;
@@ -84,7 +85,7 @@ public:
     Location getLastLocation() const {return lastLocation;}
     float getMinTemp() const {return minTemp;}
     float getMaxTemp() const {return maxTemp;}
-    const vector<TelemetryLog> getTelemetryHistory() const{return telemetryHistory;}
+    const vector<TelemetryLog>& getTelemetryHistory() const{return telemetryHistory;}
 };
 
 // Publisher quản lý danh sách Observers và phát sự kiện
@@ -109,18 +110,22 @@ private:
     EventPublisher* eventPublisher;     // Dependency Injection Publisher
 
     int generateUniqueId(){
-        static int counter = 1000; 
-        static bool initialized = false; 
-        if(!initialized && shipmentRepo != nullptr){
-            auto shipments = shipmentRepo->findAll();
-            for(const auto& s : shipments){
-                if(s.getShipmentId() > counter){
-                    counter = s.getShipmentId();
-                }
+        int maxId = 1000; 
+        if(shipmentRepo != nullptr){
+            for(const auto& s : shipmentRepo->findAll()){
+                if(s.getShipmentId() > maxId) maxId = s.getShipmentId();
             }
-            initialized = true; 
         }
-        return ++counter; 
+        return maxId + 1; 
+    }
+
+    static string currentTimeString(){
+        time_t now = time(nullptr);
+        tm* ltm = localtime(&now);
+        char buf[32];
+        strftime(buf, sizeof(buf), "%H:%M:%S %d/%m/%Y", ltm);
+        return string(buf);
+
     }
 
 public:
@@ -132,12 +137,16 @@ public:
         if(shipmentRepo == nullptr) return; 
         Shipment* shipment = shipmentRepo->findById(shipmentId);
         if(shipment) {
-            shipment->markTransit(); // chuyen sang Delivered 
+            shipment->markDelivered(); // chuyen sang Delivered 
             shipmentRepo->save(*shipment); 
         }
     }
     // 1. Nghiệp vụ: Tạo lô hàng mới từ DTO
     int createShipment(const CreateShipmentDTO& dto) {
+        float minT = dto.getMaxTemp(); 
+        float maxT = dto.getMaxTemp(); 
+        if(minT > maxT) swap(minT, maxT); // neu nhap nguoc thi tu dao lai 
+
         // Tạo Value Object & Entity con thuộc Domain
         TemperatureRange tempRange(dto.getMinTemp(), dto.getMaxTemp());
         ColdContainer container(dto.getContainerId(), "Standard-Model", tempRange);
@@ -148,6 +157,10 @@ public:
 
         // Bắt đầu trạng thái vận chuyển
         shipment.startTransit();
+
+        //tao nhiet do, toa do dau tien cho lo hang 
+        float startTemp = (minT + maxT) /2.0f; 
+        shipment.addTelemetry(TelemetryLog(startTemp, Location(21.0f, 105.08f), currentTimeString(), "Khoi tao lo hang"));
 
         // Lưu thông qua Repository Pattern
         if (shipmentRepo != nullptr) {
@@ -215,10 +228,11 @@ public:
             int violationCount = static_cast<int>(shipment.getViolations().size());
             float lastTemp = 0.0f;
             Location lastLoc; 
-            
-            if (violationCount > 0){
-                lastTemp = shipment.getViolations().back().getRecordedTemp();
-                lastLoc = shipment.getViolations().back().getLocation();
+
+            const auto& tele = shipment.getTelemetryHistory(); 
+            if(!tele.empty()){
+                lastTemp = tele.back().getTemperature(); 
+                lastLoc = tele.back().getLocation(); 
             }
 
             TemperatureRange range = shipment.getContainer().getTempRange();
@@ -226,12 +240,13 @@ public:
             ShipmentDTO dto(
                 shipment.getShipmentId(),
                 shipment.getProductName(),
-                statusStr,
+                statusToString(shipment.getStatus()),
                 lastTemp,
                 violationCount,
                 lastLoc,
                 range.getMin(), 
-                range.getMax()
+                range.getMax(), 
+                tele
             );
 
             dtoList.push_back(dto);

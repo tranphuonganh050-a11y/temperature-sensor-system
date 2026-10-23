@@ -12,6 +12,24 @@ enum class ShipmentStatus{ // tạo kiểu dữ liệu mới tên shipmentStatus
     DELIVERED, 
     COMPROMISED
 };
+
+inline string statusToString(ShipmentStatus s){
+    switch(s){
+        case ShipmentStatus::CREATED:     return "CREATED";
+        case ShipmentStatus::IN_TRANSIT:  return "IN_TRANSIT";
+        case ShipmentStatus::ALERTED:     return "ALERTED";
+        case ShipmentStatus::DELIVERED:   return "DELIVERED";
+        case ShipmentStatus::COMPROMISED: return "COMPROMISED";
+    }
+    return "UNKNOWN";
+}
+inline ShipmentStatus statusFromString(const string& s){
+    if (s == "IN_TRANSIT")  return ShipmentStatus::IN_TRANSIT;
+    if (s == "ALERTED")     return ShipmentStatus::ALERTED;
+    if (s == "DELIVERED")   return ShipmentStatus::DELIVERED;
+    if (s == "COMPROMISED") return ShipmentStatus::COMPROMISED;
+    return ShipmentStatus::CREATED;
+}
 // Value Object: Phạm  vi nhiệt độ an toàn 
 class TemperatureRange{
     private: 
@@ -143,7 +161,6 @@ class Shipment{
         ColdContainer container; 
         vector<ViolationLog> violation; 
         vector<TelemetryLog> telemetryHistory; 
-        vector<string> telemetrySummary; 
     public:
         Shipment(int id=0, const string& name="", const string& send="", const string& rcv="", const ColdContainer& con=ColdContainer(), ShipmentStatus st=ShipmentStatus::CREATED){
             shipmentId = id; 
@@ -161,7 +178,6 @@ class Shipment{
         const vector<ViolationLog>& getViolations() const {return violation;}
         const ColdContainer& getContainer() const {return container;}
         const vector<TelemetryLog>& getTelemetryHistory() const{return telemetryHistory;}
-        const vector<string>& getTelemetrySummary() const{return telemetrySummary;}
         
         //cập nhật trạng thái khi lô hàng được tạo 
         void startTransit(){
@@ -170,7 +186,7 @@ class Shipment{
             }
         }
         // đánh dấu trạng thái khi lô hàng đang được giao hoặc đã cảnh báo  
-        void markTransit(){
+        void markDelivered(){
             if( status == ShipmentStatus::IN_TRANSIT || status == ShipmentStatus::ALERTED){
                 status = ShipmentStatus::DELIVERED; 
             }
@@ -190,10 +206,11 @@ class Shipment{
         }
         // Xử lý khi phát sinh event 
         bool processSensorData(float temp, const Location& loc, const string& timestamp, const string& scenarioName = "UNKNOWN"){
-            // Lưu lại chuỗi log để lát xuất Excel vẽ biểu đồ
-        string logEntry = timestamp + "|" + to_string(temp) + "|" + to_string(loc.getLatitude()) + "," + to_string(loc.getLongitude()) + "|" + scenarioName;
-        telemetrySummary.push_back(logEntry);
-            bool isExceeded = !container.checkTemperature(temp) || (scenarioName != "Xe di chuyen binh thuong !");
+        
+            telemetryHistory.push_back(TelemetryLog(temp, loc, timestamp, scenarioName));
+
+        
+            bool isExceeded = !container.checkTemperature(temp);
             if(isExceeded){ //Neu vuot nguong thì đổi status và được thêm vào violation
                 status = ShipmentStatus::ALERTED; 
                 violation.push_back(ViolationLog(temp,  loc, timestamp));
@@ -203,6 +220,9 @@ class Shipment{
         }
         void addViolation(const ViolationLog& v){
             violation.push_back(v);
+        }
+        void addTelemetry(const TelemetryLog& t){
+            telemetryHistory.push_back(t);
         }
 
 };
