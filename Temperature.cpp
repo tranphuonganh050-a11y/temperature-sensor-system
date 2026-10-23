@@ -9,18 +9,20 @@ int main(){
 
     TelemetryProcessor telemetryProcessor; 
     // Tao cac observer 
+    /*
     AlertService alertService; 
     ShipmentAggregator aggregatorService; 
     DashboardNotifier dashboardNotifier; 
+    */ 
     // Đăng ký thêm Feed Logger vào telemetryProcessor sẵn có
     AlertFeedLogger alertFeedLogger;
 
-
+    /*
     telemetryProcessor.subscribe(&alertService);
     telemetryProcessor.subscribe(&aggregatorService);
     telemetryProcessor.subscribe(&dashboardNotifier);
     telemetryProcessor.subscribe(&alertFeedLogger);
-
+    */ 
     
     ShipmentService shipmentService(&repo, &telemetryProcessor); 
 

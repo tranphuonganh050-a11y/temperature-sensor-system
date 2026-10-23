@@ -172,6 +172,7 @@ class IShipmentRepository{
         virtual Shipment* findById(const int& shipmentId) = 0; 
         virtual vector<Shipment> findAll() = 0; 
 };
+/*
 class ITemperatureObserver{
     public: 
         virtual ~ITemperatureObserver() {}
@@ -180,21 +181,17 @@ class ITemperatureObserver{
 class AlertService: public ITemperatureObserver{
     public: 
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
-            cout << "WARNING!!!! Lo hang " << event.getShipmentId()
-                << " vi pham nhiet do bao quan !" << endl; 
         }
 };
 class ShipmentAggregator: public ITemperatureObserver{
     public: 
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
-            cout << "Ghi nhan nhat ky vi pham lo hang " << event.getShipmentId() << endl; 
         }
 };
 class DashboardNotifier: public ITemperatureObserver{
     public:
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
-            cout << event.getScenarioName() << endl; 
-
         }
 };
+*/
 #endif
