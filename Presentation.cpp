@@ -149,6 +149,7 @@ public:
             if(item.getShipmentId() == maHang){
                 exists = true;
                 currentStatus = item.getStatus(); 
+                productName = item.getProductName(); 
                 minSafe = item.getMinTemp(); 
                 maxSafe = item.getMaxTemp(); 
                 break; 
