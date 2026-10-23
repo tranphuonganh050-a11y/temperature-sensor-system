@@ -100,7 +100,7 @@ public:
                     cout << "Chao tam biet!" << endl;
                     break;
                 default:
-                    cout << "San pham khong co trong danh muc. Vui long chon lai!" << endl;
+                    cout << "Lua chon khong co trong danh muc. Vui long chon lai!" << endl;
             }
         } while (Luachon != 5);
     }
@@ -118,7 +118,7 @@ public:
         getline(cin, gui);
         cout << "Nguoi nhan: ";
         getline(cin, nhan);
-        cout << "Thiet bi (Container ID): ";
+        cout << "Container ID: ";
         cin >> thietBiId;
         cout << "Nhiet do an toan min (do C): ";
         cin >> min;
