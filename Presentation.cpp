@@ -160,9 +160,14 @@ public:
             return; //Dừng chạy 
         }
         if(currentStatus == "DELIVERED"){
-            cout << "Lo hang " << maHang << " da giao. Vui long chon lo hang khac de chay mocking: ";
+            cout << "Lo hang " << maHang << " da giao. Vui long chon lai:  ";
             return;  
         }
+        if(currentStatus == "COMPROMIZED"){
+            cout << "Lo hang " << maHang << " da bi huy. Vui long chon lai: "; 
+            return; 
+        }
+        
         MockSensor sensor("Sensor-01");
         int totalSteps = 6;
 

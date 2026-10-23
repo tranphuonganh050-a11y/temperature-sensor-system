@@ -15,7 +15,6 @@
 </style>
 </head>
 <body>
-<h3>BANG TONG HOP LO HANG</h3>
 <table>
   <tr>
     <th>Ma lo hang</th>
@@ -70,11 +69,19 @@
     <td>Thit lon tuoi</td>
     <td>COMPROMISED</td>
     <td>10.4</td>
+    <td>8</td>
+    <td>20.9332, 105.8481</td>
+  </tr>
+  <tr class="alert">
+    <td>1007</td>
+    <td>Vaccine </td>
+    <td>COMPROMISED</td>
+    <td>12.2</td>
     <td>4</td>
-    <td>21.0783, 105.7803</td>
+    <td>20.9925, 105.7762</td>
   </tr>
 </table>
-<h3>BANG DU LIEU BIEN DONG NHIET DO (SERIES DATA FOR CHART)</h3>
+<h3>BANG DU LIEU BIEN DONG NHIET DO </h3>
 <table>
   <tr class="sub-header">
     <th>Ma lo hang</th>
