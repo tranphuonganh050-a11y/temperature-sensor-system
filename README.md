@@ -30,3 +30,15 @@ Hệ thống giám sát và điều phối các sản phẩm nhạy cảm với 
 
 4. Thông tin các lần mock của 1 sản phẩm chưa up được vào file excel nên chưa vẽ được biểu đồ 
 --> Sửa để mỗi cần mock data của lô hàng đó sẽ được lưu vào file.xls để đưa sang excel rồi vẽ chart bên excel 
+
+# Đã sửa được - vấn đề 1 và 2 
+1. - Trạng thái IN_TRANSIT đã được thiết lập tọa độ, nhiệt độ 
+2. - Đã chạy mock với số lần vi phạm ngẫu nhiên và các trạng thái ngẫu nhiên 
+ - Các trạng thái đã được cập nhật vào lịch sử (cơ mà mấy cái trước bị reset về 0 :))) 
+3. - Lịch sử đã được cập nhật lên EXcel 
+# Cần sửa thêm 
+1. - Mấy lô hàng mà sau khi chạy mock có số lần vi phạm vượt quá 3 (COMPROMIZED) hoặc DELIVERED, không được phép chạy mock lại 
+--> Cần thêm chỗ này để phân loại lô được chạy mock, lô hết cơ hội chạy 
+2. Vẽ biểu đồ trên EXCel 
+3. Sửa cái giao diện in ra cho đẹp 
+
