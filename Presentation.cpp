@@ -144,7 +144,13 @@ public:
         
        
         auto history = shipmentService.getShipmentHistory();
-        const ShipmentDTO* found = findShipment(history, maHang); 
+        const ShipmentDTO* found = nullptr;
+        for (const auto& item : history) {
+            if (item.getShipmentId() == maHang) {
+                found = &item;
+                break;
+            }
+        }
 
         if(!found){
             cout << "Khong tim thay lo hang ma " << maHang << ". Vui long tao lo hang moi hoac kiem tra lai ma.\n";
