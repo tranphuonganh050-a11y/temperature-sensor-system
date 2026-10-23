@@ -136,6 +136,14 @@
     <td>3</td>
     <td>21.0159, 105.7047</td>
   </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>COMPROMISED</td>
+    <td>14.1</td>
+    <td>6</td>
+    <td>21.0461, 105.8367</td>
+  </tr>
 </table>
 <h3>BANG DU LIEU BIEN DONG NHIET DO </h3>
 <table>
@@ -998,6 +1006,76 @@
     <td>2.0</td>
     <td>5.0</td>
     <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>1</td>
+    <td>00:38:53 24/10/2026</td>
+    <td>6.5</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Khoi tao lo hang</td>
+  </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>2</td>
+    <td>00:38:58 24/10/2026</td>
+    <td>8.9</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>3</td>
+    <td>00:39:00 24/10/2026</td>
+    <td>14.2</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>4</td>
+    <td>00:39:02 24/10/2026</td>
+    <td>15.3</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>5</td>
+    <td>00:39:04 24/10/2026</td>
+    <td>12.6</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>6</td>
+    <td>00:39:06 24/10/2026</td>
+    <td>13.8</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr class="alert">
+    <td>1015</td>
+    <td>Tra sua socola</td>
+    <td>7</td>
+    <td>00:39:08 24/10/2026</td>
+    <td>14.1</td>
+    <td>5.0</td>
+    <td>8.0</td>
+    <td>Mo cua xe dot ngot !</td>
   </tr>
 </table>
 </body>
