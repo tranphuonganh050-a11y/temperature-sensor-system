@@ -90,9 +90,9 @@ public:
                 case 4: {
                    bool isSuccess = AuditReportExporter::exportToCSV(shipmentService.getShipmentHistory());
                     if (isSuccess) {
-                        cout << "\nDa xuat bao cao: ColdChain_Compliance_Report.csv\n";
+                        cout << "\nDa xuat bao cao: ColdChain_Compliance_Report.xls\n";
                     } else {
-                        cout << "\nKhong the xuat file CSV!\n";
+                        cout << "\nKhong the xuat file Excel!\n";
                     }
                     break;
                 }
@@ -221,8 +221,8 @@ public:
             }
         }
             cout << "Lo hang " << maHang << " vi pham nhiet do " << violationCount << " lan" << endl; 
-        if(AuditReportExporter::exportToCSV(shipmentService.getShipmentHistory())){
-            cout << "Xuat file thanh cong!" << endl; 
+        if(AuditReportExporter::exportToExcel(shipmentService.getShipmentHistory())){
+            cout << "Xuat file Excel thanh cong!" << endl; 
         }
         else cout << "Loi xuat file" << endl; 
         }

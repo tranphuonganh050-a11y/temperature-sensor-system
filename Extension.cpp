@@ -8,7 +8,7 @@
 #include <iomanip> 
 using namespace std;
 
-// Xuất báo cáo dạng excel/csv
+// Xuất báo cáo excel định dạng html 
 class AuditReportExporter{
     public: 
     // Xuất file csv gốc làm bộ đệm 
@@ -28,32 +28,65 @@ class AuditReportExporter{
             return true; 
         }
         //Xuất dạng excel 
-        static bool exportToExcel(const vector<ShipmentDTO>& history, const vector<TemperatureExceededEvent>& alertLogs ={}){
-            // ghi data vi pham ra file tam 
-            ofstream vFile("temp_violations.txt");
-            if(vFile.is_open()){
-                for(const auto& ev : alertLogs){
-                    vFile << ev.getShipmentId() << "|"
-                        << ev.getTimestamp() << "|"
-                        << ev.getExceededTemp() << "|"
-                        << "Lat " << ev.getLocation().getLatitude() << ", Lon " << ev.getLocation().getLongitude() << "\n";
+        static bool exportToExcel(const vector<ShipmentDTO>& history, const vector<TemperatureExceededEvent>& alertLogs ={}, const string& filename = "ColdChain_Compliance_Report.xls"){
+            ofstream outFile(filename); 
+            if(!outFile.is_open()) return false;
+            // dinh dang html 
+            outFile << "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">\n";
+            outFile << "<head>\n";
+            outFile << "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
+            outFile << "<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>\n";
+            outFile << "<x:Name>Bao Cao Lich Su</x:Name>\n";
+            outFile << "<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>\n";
+            outFile << "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\n";
+            outFile << "<style>\n";
+            outFile << "  body { font-family: 'Segoe UI', Tahoma, sans-serif; }\n";
+            outFile << "  table { border-collapse: collapse; width: 100%; }\n";
+            outFile << "  th, td { border: 1px solid #d9d9d9; padding: 8px 12px; text-align: center; }\n";
+            outFile << "  th { background-color: #1F4E78; color: white; font-weight: bold; }\n";
+            outFile << "  .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }\n"; // Màu cảnh báo vi phạm
+            outFile << "</style>\n";
+            outFile << "</head>\n";
+            outFile << "<body>\n";
+            outFile << "<table>\n";
+            // Tiêu đề cột
+            outFile << "  <tr>\n";
+            outFile << "    <th>Ma lo hang</th>\n";
+            outFile << "    <th>Ten san pham</th>\n";
+            outFile << "    <th>Trang thai</th>\n";
+            outFile << "    <th>Nhiet do cuoi (C)</th>\n";
+            outFile << "    <th>So lan vi pham</th>\n";
+            outFile << "    <th>Vi tri (Lat, Lon)</th>\n";
+            outFile << "  </tr>\n";
+
+           // Duyệt danh sách đưa vào các dòng của Excel
+            for(const auto& item : history){
+                bool hasViolation = item.getViolationCount() > 0;
+                
+                // Nếu có vi phạm thì gắn class 'alert' để tô đỏ dòng đó
+                if (hasViolation) {
+                    outFile << "  <tr class=\"alert\">\n";
+                } else {
+                    outFile << "  <tr>\n";
                 }
-                vFile.close(); 
+                
+                outFile << "    <td>" << item.getShipmentId() << "</td>\n";
+                outFile << "    <td>" << item.getProductName() << "</td>\n";
+                outFile << "    <td>" << item.getStatus() << "</td>\n";
+                outFile << "    <td>" << fixed << setprecision(1) << item.getLastRecordedTemp() << "</td>\n";
+                outFile << "    <td>" << item.getViolationCount() << "</td>\n";
+                outFile << "    <td>" << fixed << setprecision(4) 
+                        << item.getLastLocation().getLatitude() << ", " 
+                        << item.getLastLocation().getLongitude() << "</td>\n";
+                outFile << "  </tr>\n";
             }
-            // ghi data lo hang ra file tam 
-            ofstream sFile("temp_shipments.txt");
-            if(sFile.is_open()){
-                for(const auto& item : history){
-                    sFile << item.getShipmentId() << "|"
-                          << item.getProductName() << "|"
-                          << item.getStatus() << "|"
-                          << item.getViolationCount() << "|"
-                          << "Lat " << item.getLastLocation().getLatitude() << ", Lon " << item.getLastLocation().getLongitude() << "\n";
-                }
-                sFile.close();
-            }
-            // chuyen doi thanh Excel 
-            
+
+            outFile << "</table>\n";
+            outFile << "</body>\n";
+            outFile << "</html>\n";
+
+            outFile.close();
+            return true; 
         }
 };
 
