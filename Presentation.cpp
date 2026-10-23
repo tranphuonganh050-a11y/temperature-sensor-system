@@ -27,6 +27,7 @@ public:
         {
             cout << "| Ma lo hang: " << item.getShipmentId() << endl;
             cout << "| Ten san pham: " << item.getProductName() << endl;
+            cout << "| Trang thai: \033[1m" << item.getStatus() << "\033[0m" << endl;
             cout << "| Nhiet do cuoi cung: " << item.getLastRecordedTemp() << " do C" << endl;
             cout << "| So lan vi pham: " << item.getViolationCount() << endl;
             cout << "----------------------------------------" << endl;

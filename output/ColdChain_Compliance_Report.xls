@@ -8,7 +8,7 @@
 <style>
   body { font-family: 'Segoe UI', Tahoma, sans-serif; }
   table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
-  th, td { border: 1px solid #d9d9d9; padding: 8px 12px; text-align: center; }
+  th, td { border: 1px solid #c6b0b0; padding: 8px 12px; text-align: center; }
   th { background-color: #1F4E78; color: white; font-weight: bold; }
   .sub-header { background-color: #2F5597; color: white; font-weight: bold; }
   .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }
@@ -95,6 +95,22 @@
     <td>5.8</td>
     <td>3</td>
     <td>20.9560, 105.8660</td>
+  </tr>
+  <tr>
+    <td>1010</td>
+    <td>Ca ngu</td>
+    <td>IN_TRANSIT</td>
+    <td>0.0</td>
+    <td>0</td>
+    <td>21.0000, 105.0800</td>
+  </tr>
+  <tr class="alert">
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>ALERTED</td>
+    <td>-12.8</td>
+    <td>3</td>
+    <td>20.9215, 105.8675</td>
   </tr>
 </table>
 <h3>BANG DU LIEU BIEN DONG NHIET DO </h3>
@@ -428,6 +444,86 @@
     <td>-5.0</td>
     <td>0.0</td>
     <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr>
+    <td>1010</td>
+    <td>Ca ngu</td>
+    <td>1</td>
+    <td>23:44:39 23/10/2026</td>
+    <td>0.0</td>
+    <td>0.0</td>
+    <td>0.0</td>
+    <td>Khoi tao lo hang</td>
+  </tr>
+  <tr>
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>1</td>
+    <td>23:46:25 23/10/2026</td>
+    <td>-12.5</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Khoi tao lo hang</td>
+  </tr>
+  <tr>
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>2</td>
+    <td>23:46:52 23/10/2026</td>
+    <td>-12.5</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr class="alert">
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>3</td>
+    <td>23:46:54 23/10/2026</td>
+    <td>-9.4</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr>
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>4</td>
+    <td>23:46:56 23/10/2026</td>
+    <td>-12.0</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr class="alert">
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>5</td>
+    <td>23:46:58 23/10/2026</td>
+    <td>-3.7</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>6</td>
+    <td>23:47:00 23/10/2026</td>
+    <td>-1.8</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr>
+    <td>1011</td>
+    <td>Ca ngu</td>
+    <td>7</td>
+    <td>23:47:02 23/10/2026</td>
+    <td>-12.8</td>
+    <td>-15.0</td>
+    <td>-10.0</td>
+    <td>Xe di chuyen binh thuong !</td>
   </tr>
 </table>
 </body>

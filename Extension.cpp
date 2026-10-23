@@ -42,7 +42,7 @@ class AuditReportExporter{
         outFile << "<style>\n";
         outFile << "  body { font-family: 'Segoe UI', Tahoma, sans-serif; }\n";
         outFile << "  table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }\n";
-        outFile << "  th, td { border: 1px solid #d9d9d9; padding: 8px 12px; text-align: center; }\n";
+        outFile << "  th, td { border: 1px solid #c6b0b0; padding: 8px 12px; text-align: center; }\n";
         outFile << "  th { background-color: #1F4E78; color: white; font-weight: bold; }\n";
         outFile << "  .sub-header { background-color: #2F5597; color: white; font-weight: bold; }\n";
         outFile << "  .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }\n";
@@ -134,7 +134,7 @@ class AlertFeedLogger:public ITemperatureObserver{
         }
         void displayAlertFeed(const vector<ShipmentDTO>& shipmentHistory = {}) const{
         cout << "\n==========================================================================" << endl;
-        cout << "|                  DANH SACH CANH BAO (ALERT FEED)                        |" << endl;
+        cout << "|                  DANH SACH CANH BAO                                     |" << endl;
         cout << "==========================================================================" << endl;
 
         if (alertLogs.empty()) {

@@ -80,6 +80,7 @@ private:
                     getline(ss, timeStr, '|');
                     getline(ss, tempStr, '|');
                     getline(ss, locStr, '|');
+                    
 
                     Shipment* s = findById(stoi(idStr));
                     if (s) s->addViolation(ViolationLog(stof(tempStr), parseLocation(locStr), timeStr));
@@ -175,7 +176,7 @@ public:
             cout << "Chua co lich su kiem tra\n";
             return;
         }
-        cout << "\n===== LICH SU KIEM TRA TU FILE TEXT =====" << endl;
+        cout << "\n===== LICH SU KIEM TRA ===============" << endl;
         string line;
         while (getline(inFile, line)) cout << line << endl;
         cout << "=========================================\n" << endl;
