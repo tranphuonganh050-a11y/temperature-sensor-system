@@ -176,7 +176,6 @@ public:
             string scenarioName = sensor.scenarioToString(scenario);
             Location loc = sensor.readCurrentLocation();
             string timestamp = sensor.getCurrentTime(); 
-            string productName = 
         
             try
             {   
