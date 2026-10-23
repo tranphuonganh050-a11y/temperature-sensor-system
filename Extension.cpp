@@ -107,7 +107,7 @@ class AlertFeedLogger:public ITemperatureObserver{
                  << "| " << setw(18) << productName
                  << "| " << setw(18) << event.getTimestamp()
                  << "| " << setw(14) << coordStr
-                 << "| " << setw(8) + string(" C") << (to_string(event.getExceededTemp()).substr(0, 4) + "C")
+                 << "| " << setw(8) << (to_string(event.getExceededTemp()).substr(0, 4) + "C")
                  << "| " << setw(22) << event.getScenarioName() << " |"
                  << "\033[0m" << endl;
         }
