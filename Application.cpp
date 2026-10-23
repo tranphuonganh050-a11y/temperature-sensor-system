@@ -143,7 +143,7 @@ public:
     }
     // 1. Nghiệp vụ: Tạo lô hàng mới từ DTO
     int createShipment(const CreateShipmentDTO& dto) {
-        float minT = dto.getMaxTemp(); 
+        float minT = dto.getMinTemp(); 
         float maxT = dto.getMaxTemp(); 
         if(minT > maxT) swap(minT, maxT); // neu nhap nguoc thi tu dao lai 
 

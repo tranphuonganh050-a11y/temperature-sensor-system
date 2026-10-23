@@ -177,7 +177,7 @@ public:
 
         for (int step = 1; step <= totalSteps; ++step)
         {
-            SimulationScenario scenario;
+            SimulationScenario scenario = sensor.planRun(totalSteps)[step - 1];
             float temp = sensor.readCurrentTemp(scenario, minSafe, maxSafe);
             string scenarioName = sensor.scenarioToString(scenario);
             Location loc = sensor.readCurrentLocation();
@@ -185,11 +185,10 @@ public:
         
             try
             {   
-                bool isViolated = (temp < minSafe || temp > maxSafe || scenario != SimulationScenario::NORMAL);
+                bool isViolated = (temp < minSafe || temp > maxSafe);
                 // Gọi Application xử lý dữ liệu và bắn cảnh báo vi phạm
-                if(isViolated){
+
                 shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
-                }
 
                 cout << "| Mock: " << step << endl; 
                 cout << "| Ma lo hang               : " << maHang << endl;
