@@ -63,7 +63,15 @@
     <td>DELIVERED</td>
     <td>9.6</td>
     <td>4</td>
-    <td>20.9203, 105.7666</td>
+    <td>20.9203, 105.7670</td>
+  </tr>
+  <tr class="alert">
+    <td>1006</td>
+    <td>Thit lon tuoi</td>
+    <td>COMPROMISED</td>
+    <td>10.4</td>
+    <td>4</td>
+    <td>21.0783, 105.7803</td>
   </tr>
 </table>
 <h3>BANG DU LIEU BIEN DONG NHIET DO (SERIES DATA FOR CHART)</h3>

@@ -50,10 +50,7 @@ class AuditReportExporter{
         outFile << "</head>\n";
         outFile << "<body>\n";
 
-        // -------------------------------------------------------------
-        // BANG 1: TONG HOP CAC LO HANG (GIỮ NGUYÊN BẢNG CŨ)
-        // -------------------------------------------------------------
-        outFile << "<h3>BANG TONG HOP LO HANG</h3>\n";
+       
         outFile << "<table>\n";
         outFile << "  <tr>\n";
         outFile << "    <th>Ma lo hang</th>\n";
@@ -83,7 +80,7 @@ class AuditReportExporter{
             outFile << "  </tr>\n";
         }
         outFile << "</table>\n";
-        outFile << "<h3>BANG DU LIEU BIEN DONG NHIET DO (SERIES DATA FOR CHART)</h3>\n";
+        outFile << "<h3>BANG DU LIEU BIEN DONG NHIET DO </h3>\n";
         outFile << "<table>\n";
         outFile << "  <tr class=\"sub-header\">\n";
         outFile << "    <th>Ma lo hang</th>\n";

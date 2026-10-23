@@ -143,6 +143,7 @@ class Shipment{
         ColdContainer container; 
         vector<ViolationLog> violation; 
         vector<TelemetryLog> telemetryHistory; 
+        vector<string> telemetrySummary; 
     public:
         Shipment(int id=0, const string& name="", const string& send="", const string& rcv="", const ColdContainer& con=ColdContainer(), ShipmentStatus st=ShipmentStatus::CREATED){
             shipmentId = id; 
@@ -159,6 +160,8 @@ class Shipment{
         ShipmentStatus getStatus() const {return status;}
         const vector<ViolationLog>& getViolations() const {return violation;}
         const ColdContainer& getContainer() const {return container;}
+        const vector<TelemetryLog>& getTelemetryHistory() const{return telemetryHistory;}
+        const vector<string>& getTelemetrySummary() const{return telemetrySummary;}
         
         //cập nhật trạng thái khi lô hàng được tạo 
         void startTransit(){
@@ -187,7 +190,9 @@ class Shipment{
         }
         // Xử lý khi phát sinh event 
         bool processSensorData(float temp, const Location& loc, const string& timestamp, const string& scenarioName = "UNKNOWN"){
-
+            // Lưu lại chuỗi log để lát xuất Excel vẽ biểu đồ
+        string logEntry = timestamp + "|" + to_string(temp) + "|" + to_string(loc.getLatitude()) + "," + to_string(loc.getLongitude()) + "|" + scenarioName;
+        telemetrySummary.push_back(logEntry);
             bool isExceeded = !container.checkTemperature(temp) || (scenarioName != "Xe di chuyen binh thuong !");
             if(isExceeded){ //Neu vuot nguong thì đổi status và được thêm vào violation
                 status = ShipmentStatus::ALERTED; 
