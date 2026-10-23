@@ -27,8 +27,6 @@ public:
         {
             cout << "| Ma lo hang: " << item.getShipmentId() << endl;
             cout << "| Ten san pham: " << item.getProductName() << endl;
-            cout << "| Toa do xe van chuyen: (" << item.getLastLocation().getLatitude() << ", " << item.getLastLocation().getLongitude() << ")" << endl;
-            cout << "| Trang thai: " << item.getStatus() << endl;
             cout << "| Nhiet do cuoi cung: " << item.getLastRecordedTemp() << " do C" << endl;
             cout << "| So lan vi pham: " << item.getViolationCount() << endl;
             cout << "----------------------------------------" << endl;
@@ -136,40 +134,40 @@ public:
         int maHang;
         cout << "Nhap ma lo hang muon mo phong: ";
         cin >> maHang; 
+        if(cin.fail()){
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Loi! Ma l hang phai la so! "<< endl;
+            return; 
+        }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
        
         auto history = shipmentService.getShipmentHistory();
-        bool exists = false; 
-        string currentStatus = "";
-        string productName = ""; 
-        float minSafe = 0.0f, maxSafe = 0.0f; 
+        const ShipmentDTO* found = findShipment(history, maHang); 
 
-        for(const auto& item : history){
-            if(item.getShipmentId() == maHang){
-                exists = true;
-                currentStatus = item.getStatus(); 
-                productName = item.getProductName(); 
-                minSafe = item.getMinTemp(); 
-                maxSafe = item.getMaxTemp(); 
-                break; 
-            }
-        }
-        if (!exists){
-            cout << "Khong tim thay lo hang ma: " << maHang << ". Vui long tao lo hang hoac kiem tra lai ma: \n ";
-            return; //Dừng chạy 
-        }
-        if(currentStatus == "DELIVERED"){
-            cout << "Lo hang " << maHang << " da giao. Vui long chon lai:  ";
-            return;  
-        }
-        if(currentStatus == "COMPROMIZED"){
-            cout << "Lo hang " << maHang << " da bi huy. Vui long chon lai: "; 
+        if(!found){
+            cout << "Khong tim thay lo hang ma " << maHang << ". Vui long tao lo hang moi hoac kiem tra lai ma.\n";
             return; 
         }
-        
+        const string currentStatus = found->getStatus(); 
+        if(currentStatus == "DELIVERED"){
+            cout << "Lo hang " << maHang << " da giao thanh cong -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac.\n";
+            return; 
+        }
+        if(currentStatus == "COMPROMIZED"){
+            cout << "Lo hang " << maHang << " da bi huy do vi pham qua 3 lan -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac.\n";
+            return; 
+        }
+        const string productName = found->getProductName();
+        const float minSafe = found->getMinTemp();
+        const float maxSafe = found->getMaxTemp(); 
+
         MockSensor sensor("Sensor-01");
-        int totalSteps = 6;
+        const int totalSteps = 6;
+
+        vector<SimulationScenario> plan = sensor.planRun(totalSteps);
+        int violationsThisRun = 0;
 
         cout << "\n==================================================" << endl;
         cout << "|              MO PHONG CAM BIEN IoT              |" << endl;
@@ -189,6 +187,7 @@ public:
                 // Gọi Application xử lý dữ liệu và bắn cảnh báo vi phạm
 
                 shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
+                if(isViolated) ++violationsThisRun; 
 
                 cout << "| Mock: " << step << endl; 
                 cout << "| Ma lo hang               : " << maHang << endl;
