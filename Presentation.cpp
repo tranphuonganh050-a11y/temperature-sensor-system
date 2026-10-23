@@ -164,7 +164,7 @@ public:
             cout << "Lo hang " << maHang << " da giao thanh cong -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac!\n";
             return; 
         }
-        if(currentStatus == "COMPROMIZED"){
+        if(currentStatus == "COMPROMISED"){
             cout << "Lo hang " << maHang << " da bi huy do vi pham qua 3 lan -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac!\n";
             return; 
         }
