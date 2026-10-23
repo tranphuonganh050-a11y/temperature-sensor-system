@@ -147,7 +147,7 @@ public:
         for(const auto& item : history){
             if(item.getShipmentId() == maHang){
                 exists = true;
-                currentStatus - item.getStatus(); 
+                currentStatus = item.getStatus(); 
                 minSafe = item.getMinTemp(); 
                 maxSafe = item.getMaxTemp(); 
                 break; 
