@@ -172,12 +172,13 @@ class IShipmentRepository{
         virtual Shipment* findById(const int& shipmentId) = 0; 
         virtual vector<Shipment> findAll() = 0; 
 };
-/*
+
 class ITemperatureObserver{
     public: 
         virtual ~ITemperatureObserver() {}
         virtual void onTemperatureExceeded(const TemperatureExceededEvent& event) = 0;
 };
+/*
 class AlertService: public ITemperatureObserver{
     public: 
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{

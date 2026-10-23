@@ -181,7 +181,7 @@ public:
                 cout << "| Ma lo hang               : " << maHang << endl;
                 cout << "| Event: " << scenarioName << endl;
                 if(isViolated){
-                    cout << "\033[31m!WARNING!\033[0m" << endl; 
+                    cout << "\033[31mWARNING!\033[0m" << endl; 
                 }
                 cout << "| Nhiet do do duoc hien tai : " << fixed << setprecision(1) << temp << " do C" << endl;
                 cout << "| Nhiet do cho phep        : " << fixed << setprecision(1) << minSafe << " - " << maxSafe << " do C" << endl; 
