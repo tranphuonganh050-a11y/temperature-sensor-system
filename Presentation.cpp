@@ -19,21 +19,23 @@ class ShipmentViewFormatter
 public:
     void renderTable(const vector<ShipmentDTO>& danhSach)
     {
-        cout << "\n========================================" << endl;
-        cout << "|           DANH SACH LO HANG         |" << endl;
-        cout << "========================================" << endl;
+        cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << "|           DANH SACH LO HANG            |\n";
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        
+        
 
         for (const auto& item : danhSach)
         {
-            cout << "| Ma lo hang: " << item.getShipmentId() << endl;
-            cout << "| Ten san pham: " << item.getProductName() << endl;
-            cout << "| Trang thai: \033[1m" << item.getStatus() << "\033[0m" << endl;
-            cout << "| Nhiet do cuoi cung: " << item.getLastRecordedTemp() << " do C" << endl;
-            cout << "| So lan vi pham: " << item.getViolationCount() << endl;
-            cout << "----------------------------------------" << endl;
+            cout << "| Ma lo hang: " << item.getShipmentId() << '\n';
+            cout << "| Ten san pham: " << item.getProductName() << '\n';
+            cout << "| Trang thai: \033[1m" << item.getStatus() << "\033[0m" << '\n';
+            cout << "| Nhiet do cuoi cung: " << item.getLastRecordedTemp() << " do C" << '\n';
+            cout << "| So lan vi pham: " << item.getViolationCount() << '\n';
+            cout << "----------------------------------------\n";
         }
 
-        cout << "========================================" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
     }
 };
 
@@ -52,15 +54,15 @@ public:
         int Luachon = 0;
         do
         {
-            cout << "\n========================================" << endl;
-            cout << "|                 MENU                  |" << endl;
-            cout << "========================================" << endl;
-            cout << "|  (1) Tao lo hang                      |" << endl;
-            cout << "|  (2) Chay mo phong cam bien (Chart)   |" << endl;
-            cout << "|  (3) Xem lich su lo hang              |" << endl;
-            cout << "|  (4) Xuat bao cao Audit (File CSV)    |" << endl; // Thêm chức năng xuất file CSV
-            cout << "|  (5) Thoat                            |" << endl;
-            cout << "========================================" << endl;
+            cout << "\n========================================\n";
+            cout << "|                 MENU                  |\n";
+            cout << "========================================\n";
+            cout << "|  (1) Tao lo hang moi                  |\n";
+            cout << "|  (2) Chay mo phong cam bien           |\n";
+            cout << "|  (3) Xem lich su lo hang              |\n";
+            cout << "|  (4) Xuat du lieu                     |\n"; 
+            cout << "|  (5) Thoat chuong trinh               |\n";
+            cout << "========================================\n";
             cout << "--> Vui long chon: ";
             cin >> Luachon;
 
@@ -89,7 +91,7 @@ public:
                 case 4: {
                    bool isSuccess = AuditReportExporter::exportToCSV(shipmentService.getShipmentHistory());
                     if (isSuccess) {
-                        cout << "\nDa xuat bao cao: ColdChain_Compliance_Report.xls\n";
+                        cout << "\nDa xuat du lieu: ColdChain_Compliance_Report.xls\n";
                     } else {
                         cout << "\nKhong the xuat file Excel!\n";
                     }
@@ -99,7 +101,7 @@ public:
                     cout << "Chao tam biet!" << endl;
                     break;
                 default:
-                    cout << "Lua chon khong co trong danh muc. Vui long chon lai!" << endl;
+                    cout << "Lua chon khong co trong danh muc. Vui long chon lai!\n";
             }
         } while (Luachon != 5);
     }
@@ -126,7 +128,7 @@ public:
 
         CreateShipmentDTO donHangMoi(ten, gui, nhan, thietBiId, min, max);
         lastCreatedShipmentId = shipmentService.createShipment(donHangMoi);
-        cout << "Tao lo hang thanh cong. Ma lo hang: " << lastCreatedShipmentId << endl; 
+        cout << "Tao lo hang thanh cong. Ma lo hang: " << lastCreatedShipmentId << '\n'; 
     }
 
     // Mocking để tự động chạy nhiệt độ thay vì nhập vào
@@ -138,7 +140,7 @@ public:
         if(cin.fail()){
             cin.clear(); 
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Loi! Ma l hang phai la so! "<< endl;
+            cout << "Loi! Ma l hang phai la so! "<< '\n';
             return; 
         }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -154,16 +156,16 @@ public:
         }
 
         if(!found){
-            cout << "Khong tim thay lo hang ma " << maHang << ". Vui long tao lo hang moi hoac kiem tra lai ma.\n";
+            cout << "Khong tim thay lo hang ma " << maHang << ". Vui long tao lo hang moi hoac kiem tra lai ma!\n";
             return; 
         }
         const string currentStatus = found->getStatus(); 
         if(currentStatus == "DELIVERED"){
-            cout << "Lo hang " << maHang << " da giao thanh cong -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac.\n";
+            cout << "Lo hang " << maHang << " da giao thanh cong -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac!\n";
             return; 
         }
         if(currentStatus == "COMPROMIZED"){
-            cout << "Lo hang " << maHang << " da bi huy do vi pham qua 3 lan -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac.\n";
+            cout << "Lo hang " << maHang << " da bi huy do vi pham qua 3 lan -> Khong the mo phong lai. Vui long tao lo hang moi hoac chon lo khac!\n";
             return; 
         }
         const string productName = found->getProductName();
@@ -176,9 +178,9 @@ public:
         vector<SimulationScenario> plan = sensor.planRun(totalSteps);
         int violationsThisRun = 0;
 
-        cout << "\n==================================================" << endl;
-        cout << "|              MO PHONG CAM BIEN IoT              |" << endl;
-        cout << "==================================================" << endl;
+        cout << "\n==================================================\n";
+        cout << "|              MO PHONG CAM BIEN IoT              |\n";
+        cout << "==================================================\n";
 
         for (int step = 1; step <= totalSteps; ++step)
         {
@@ -201,13 +203,14 @@ public:
                 cout << "| Ten hang                 : " << productName << endl; 
                 cout << "| Event: " << scenarioName << endl;
                 if(isViolated){
-                    cout << "\033[31mWARNING!\033[0m" << endl; 
+                    cout << "| \033[31mWARNING!\033[0m" << endl; 
                 }
                 cout << "| Nhiet do do duoc hien tai : " << fixed << setprecision(1) << temp << " do C" << endl;
                 cout << "| Nhiet do cho phep        : " << fixed << setprecision(1) << minSafe << " - " << maxSafe << " do C" << endl; 
                 cout << "| Toa do xe                : Lat " << loc.getLatitude() << ", Lon " << loc.getLongitude() << endl;
                 cout << "| Thoi gian do             : " << timestamp << endl;
                 cout << "--------------------------------------------------\n";
+                
             }
             catch (const exception& e)
             {
@@ -218,7 +221,7 @@ public:
             this_thread::sleep_for(chrono::seconds(2));
         }
 
-        cout << "HOAN THANH MO PHONG" << endl;
+        cout << "--------------HOAN THANH MO PHONG-----------------\n";
 
         shipmentService.finalSimulation(maHang); 
         
@@ -232,7 +235,7 @@ public:
         }
             cout << "Lo hang " << maHang << " vi pham nhiet do " << violationCount << " lan" << endl; 
         if(AuditReportExporter::exportToExcel(shipmentService.getShipmentHistory())){
-            cout << "Xuat file Excel thanh cong!" << endl; 
+            cout << "Da xuat du lieu!" << endl; 
         }
         else cout << "Loi xuat file" << endl; 
         }

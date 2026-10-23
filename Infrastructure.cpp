@@ -15,10 +15,6 @@
 
 using namespace std;
 
-// Định dạng các dòng trong file LICH_SU_KIEM_TRA.txt:
-//   SHIPMENT|id|ten|nguoi gui|nguoi nhan|trang thai|container|min|max
-//   VIOLATION|id|thoi gian|nhiet do|lat,lng
-//   TELEMETRY|id|thoi gian|nhiet do|lat,lng|kich ban     <- [MỚI] để vẽ biểu đồ
 class FileShipmentRepository : public IShipmentRepository {
 private:
     string filePath;
@@ -176,10 +172,10 @@ public:
             cout << "Chua co lich su kiem tra\n";
             return;
         }
-        cout << "\n===== LICH SU KIEM TRA ===============" << endl;
+        cout << "\n===== LICH SU KIEM TRA ===============\n";
         string line;
-        while (getline(inFile, line)) cout << line << endl;
-        cout << "=========================================\n" << endl;
+        while (getline(inFile, line)) cout << line << '\n';
+        cout << "=========================================\n";
     }
 };
 

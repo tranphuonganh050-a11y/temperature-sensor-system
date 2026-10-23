@@ -132,30 +132,37 @@ class AlertFeedLogger:public ITemperatureObserver{
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override {
             alertLogs.push_back(event);
         }
-        void displayAlertFeed(const vector<ShipmentDTO>& shipmentHistory = {}) const{
-        cout << "\n==========================================================================" << endl;
-        cout << "|                  DANH SACH CANH BAO                                     |" << endl;
-        cout << "==========================================================================" << endl;
+        void displayAlertFeed(const vector<ShipmentDTO>& shipmentHistory = {}) const {
+
+        const int TABLE_WIDTH = 105;
+
+        cout << "\n=========================================================================================" << endl;
+        cout << "|                             DANH SACH CANH BAO (ALERT FEED)                            |" << endl;
+        cout << "=========================================================================================" << endl;
 
         if (alertLogs.empty()) {
-            cout << "Khong co canh bao nao duoc ghi nhan.\n";
-            cout << "-----------------------------------------------------------------------\n" << endl;
+            cout << "| Khong co canh bao nao duoc ghi nhan.                                                   |" << endl;
+            cout << "=========================================================================================" << endl;
             return;
         }
+
+        // In header của bảng
         cout << left 
-             << "| " << setw(6) << "STT"
-             << "| " << setw(10) << "Ma mang" 
-             << "| " << setw(18) << "Ten san pham" 
-             << "| " << setw(18) << "Thoi gian" 
-             << "| " << setw(14) << "Toa do" 
-             << "| " << setw(10) << "Nhiet do" 
-             << "| " << setw(22) << "Canh bao" << " |" << endl;
-        cout << "-------------------------------------------------------------------------------" << endl;
+            << "| " << setw(5)  << "STT"
+            << "| " << setw(10) << "Ma hang" 
+            << "| " << setw(18) << "Ten san pham" 
+            << "| " << setw(22) << "Thoi gian" 
+            << "| " << setw(16) << "Toa do" 
+            << "| " << setw(10) << "Nhiet do" 
+            << "| " << setw(25) << "Canh bao" << " |" << endl;
+
+        string line(TABLE_WIDTH, '-');
+        cout << line << endl;
 
         for (size_t i = 0; i < alertLogs.size(); ++i) {
             const auto& event = alertLogs[i];
             
-            // Tìm tên sản phẩm dựa vào mã lô hàng từ lịch sử
+            // Tìm tên sản phẩm dựa vào mã lô hàng
             string productName = "Unknown";
             for (const auto& item : shipmentHistory) {
                 if (item.getShipmentId() == event.getShipmentId()) {
@@ -164,21 +171,33 @@ class AlertFeedLogger:public ITemperatureObserver{
                 }
             }
 
-            string coordStr = "(" + to_string(event.getLocation().getLatitude()).substr(0, 4) + ", " + 
-                              to_string(event.getLocation().getLongitude()).substr(0, 4) + ")";
+            // Định dạng tọa độ ngắn gọn và đẹp mắt
+            stringstream coordSs;
+            coordSs << fixed << setprecision(2) << "(" << event.getLocation().getLatitude() 
+                    << ", " << event.getLocation().getLongitude() << ")";
+            string coordStr = coordSs.str();
 
-            // Render màu đỏ cho dòng cảnh báo
-            cout << "\033[31m" << left 
-                 << "| " << setw(6) << (to_string(i + 1))
-                 << "| " << setw(10) << event.getShipmentId()
-                 << "| " << setw(18) << productName
-                 << "| " << setw(18) << event.getTimestamp()
-                 << "| " << setw(14) << coordStr
-                 << "| " << setw(8) << (to_string(event.getExceededTemp()).substr(0, 4) + "C")
-                 << "| " << setw(22) << event.getScenarioName() << " |"
-                 << "\033[0m" << endl;
+            // Định dạng nhiệt độ
+            stringstream tempSs;
+            tempSs << fixed << setprecision(2) << event.getExceededTemp() << "C";
+            string tempStr = tempSs.str();
+
+            // Đổ dữ liệu vào chuỗi trước để tính độ dài chính xác
+            stringstream rowSs;
+            rowSs << left 
+                << "| " << setw(5)  << (i + 1)
+                << "| " << setw(10) << event.getShipmentId()
+                << "| " << setw(18) << productName
+                << "| " << setw(22) << event.getTimestamp()
+                << "| " << setw(16) << coordStr
+                << "| " << setw(10) << tempStr
+                << "| " << setw(25) << event.getScenarioName() << " |";
+
+            // Bọc màu đỏ ANSI quanh toàn bộ dòng đã được căn chỉnh chuẩn
+            cout << "\033[31m" << rowSs.str() << "\033[0m" << endl;
         }
-        cout << "--------------------------------------------------------------------------\n" << endl;
-        }
+
+        cout << string(TABLE_WIDTH, '=') << "\n" << endl;
+    }
 };
 #endif 

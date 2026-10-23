@@ -91,10 +91,10 @@
   <tr class="alert">
     <td>1009</td>
     <td>Hoa qua tuoi</td>
-    <td>ALERTED</td>
-    <td>5.8</td>
-    <td>3</td>
-    <td>20.9560, 105.8660</td>
+    <td>COMPROMISED</td>
+    <td>0.9</td>
+    <td>4</td>
+    <td>21.0882, 105.8318</td>
   </tr>
   <tr>
     <td>1010</td>
@@ -111,6 +111,22 @@
     <td>-12.8</td>
     <td>3</td>
     <td>20.9215, 105.8675</td>
+  </tr>
+  <tr class="alert">
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>COMPROMISED</td>
+    <td>2.8</td>
+    <td>5</td>
+    <td>21.0642, 105.7830</td>
+  </tr>
+  <tr>
+    <td>1013</td>
+    <td>Bo</td>
+    <td>IN_TRANSIT</td>
+    <td>2.5</td>
+    <td>0</td>
+    <td>21.0000, 105.0800</td>
   </tr>
 </table>
 <h3>BANG DU LIEU BIEN DONG NHIET DO </h3>
@@ -446,6 +462,66 @@
     <td>Mo cua xe dot ngot !</td>
   </tr>
   <tr>
+    <td>1009</td>
+    <td>Hoa qua tuoi</td>
+    <td>14</td>
+    <td>23:56:47 23/10/2026</td>
+    <td>-2.2</td>
+    <td>-5.0</td>
+    <td>0.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1009</td>
+    <td>Hoa qua tuoi</td>
+    <td>15</td>
+    <td>23:56:49 23/10/2026</td>
+    <td>-2.8</td>
+    <td>-5.0</td>
+    <td>0.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1009</td>
+    <td>Hoa qua tuoi</td>
+    <td>16</td>
+    <td>23:56:51 23/10/2026</td>
+    <td>-2.8</td>
+    <td>-5.0</td>
+    <td>0.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1009</td>
+    <td>Hoa qua tuoi</td>
+    <td>17</td>
+    <td>23:56:53 23/10/2026</td>
+    <td>-2.4</td>
+    <td>-5.0</td>
+    <td>0.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1009</td>
+    <td>Hoa qua tuoi</td>
+    <td>18</td>
+    <td>23:56:55 23/10/2026</td>
+    <td>-2.9</td>
+    <td>-5.0</td>
+    <td>0.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr class="alert">
+    <td>1009</td>
+    <td>Hoa qua tuoi</td>
+    <td>19</td>
+    <td>23:56:57 23/10/2026</td>
+    <td>0.9</td>
+    <td>-5.0</td>
+    <td>0.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr>
     <td>1010</td>
     <td>Ca ngu</td>
     <td>1</td>
@@ -524,6 +600,146 @@
     <td>-15.0</td>
     <td>-10.0</td>
     <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>1</td>
+    <td>23:53:21 23/10/2026</td>
+    <td>0.0</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Khoi tao lo hang</td>
+  </tr>
+  <tr class="alert">
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>2</td>
+    <td>23:54:04 23/10/2026</td>
+    <td>7.4</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>3</td>
+    <td>23:54:06 23/10/2026</td>
+    <td>-0.3</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr class="alert">
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>4</td>
+    <td>23:54:08 23/10/2026</td>
+    <td>8.3</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>5</td>
+    <td>23:54:10 23/10/2026</td>
+    <td>7.3</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>6</td>
+    <td>23:54:12 23/10/2026</td>
+    <td>0.5</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>7</td>
+    <td>23:54:14 23/10/2026</td>
+    <td>0.0</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>8</td>
+    <td>23:55:38 23/10/2026</td>
+    <td>0.1</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr class="alert">
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>9</td>
+    <td>23:55:40 23/10/2026</td>
+    <td>2.1</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>10</td>
+    <td>23:55:42 23/10/2026</td>
+    <td>0.0</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>11</td>
+    <td>23:55:44 23/10/2026</td>
+    <td>0.0</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>12</td>
+    <td>23:55:46 23/10/2026</td>
+    <td>-0.2</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr class="alert">
+    <td>1012</td>
+    <td>Ruou vang </td>
+    <td>13</td>
+    <td>23:55:48 23/10/2026</td>
+    <td>2.8</td>
+    <td>-2.0</td>
+    <td>2.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr>
+    <td>1013</td>
+    <td>Bo</td>
+    <td>1</td>
+    <td>23:55:18 23/10/2026</td>
+    <td>2.5</td>
+    <td>2.0</td>
+    <td>3.0</td>
+    <td>Khoi tao lo hang</td>
   </tr>
 </table>
 </body>
