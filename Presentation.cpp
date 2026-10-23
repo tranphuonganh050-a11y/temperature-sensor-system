@@ -182,9 +182,9 @@ public:
             {   
                 bool isViolated = (temp < minSafe || temp > maxSafe || scenario != SimulationScenario::NORMAL);
                 // Gọi Application xử lý dữ liệu và bắn cảnh báo vi phạm
-                if(isViolated){
-                    shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
-                }
+
+                shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
+                
                 cout << "| Mock: " << step << endl; 
                 cout << "| Ma lo hang               : " << maHang << endl;
                 cout << "| Ten hang                 : " << productName << endl; 

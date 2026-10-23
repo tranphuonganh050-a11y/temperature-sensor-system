@@ -27,67 +27,104 @@ class AuditReportExporter{
             outFile.close();
             return true; 
         }
-        //Xuất dạng excel 
-        static bool exportToExcel(const vector<ShipmentDTO>& history, const vector<TemperatureExceededEvent>& alertLogs ={}, const string& filename = "ColdChain_Compliance_Report.xls"){
-            ofstream outFile(filename); 
-            if(!outFile.is_open()) return false;
-            // dinh dang html 
-            outFile << "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">\n";
-            outFile << "<head>\n";
-            outFile << "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
-            outFile << "<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>\n";
-            outFile << "<x:Name>Bao Cao Lich Su</x:Name>\n";
-            outFile << "<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>\n";
-            outFile << "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\n";
-            outFile << "<style>\n";
-            outFile << "  body { font-family: 'Segoe UI', Tahoma, sans-serif; }\n";
-            outFile << "  table { border-collapse: collapse; width: 100%; }\n";
-            outFile << "  th, td { border: 1px solid #d9d9d9; padding: 8px 12px; text-align: center; }\n";
-            outFile << "  th { background-color: #1F4E78; color: white; font-weight: bold; }\n";
-            outFile << "  .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }\n"; // Màu cảnh báo vi phạm
-            outFile << "</style>\n";
-            outFile << "</head>\n";
-            outFile << "<body>\n";
-            outFile << "<table>\n";
-            // Tiêu đề cột
-            outFile << "  <tr>\n";
-            outFile << "    <th>Ma lo hang</th>\n";
-            outFile << "    <th>Ten san pham</th>\n";
-            outFile << "    <th>Trang thai</th>\n";
-            outFile << "    <th>Nhiet do cuoi (C)</th>\n";
-            outFile << "    <th>So lan vi pham</th>\n";
-            outFile << "    <th>Vi tri (Lat, Lon)</th>\n";
-            outFile << "  </tr>\n";
+            //Xuất dạng excel 
+            static bool exportToExcel(const vector<ShipmentDTO>& history, const vector<TemperatureExceededEvent>& alertLogs ={}, const string& filename = "ColdChain_Compliance_Report.xls"){
+        ofstream outFile(filename); 
+        if(!outFile.is_open()) return false;
 
-           // Duyệt danh sách đưa vào các dòng của Excel
-            for(const auto& item : history){
-                bool hasViolation = item.getViolationCount() > 0;
-                
-                // Nếu có vi phạm thì gắn class 'alert' để tô đỏ dòng đó
-                if (hasViolation) {
+        outFile << "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">\n";
+        outFile << "<head>\n";
+        outFile << "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
+        outFile << "<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>\n";
+        outFile << "<x:Name>Bao Cao Lich Su</x:Name>\n";
+        outFile << "<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>\n";
+        outFile << "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\n";
+        outFile << "<style>\n";
+        outFile << "  body { font-family: 'Segoe UI', Tahoma, sans-serif; }\n";
+        outFile << "  table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }\n";
+        outFile << "  th, td { border: 1px solid #d9d9d9; padding: 8px 12px; text-align: center; }\n";
+        outFile << "  th { background-color: #1F4E78; color: white; font-weight: bold; }\n";
+        outFile << "  .sub-header { background-color: #2F5597; color: white; font-weight: bold; }\n";
+        outFile << "  .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }\n";
+        outFile << "</style>\n";
+        outFile << "</head>\n";
+        outFile << "<body>\n";
+
+        // -------------------------------------------------------------
+        // BANG 1: TONG HOP CAC LO HANG (GIỮ NGUYÊN BẢNG CŨ)
+        // -------------------------------------------------------------
+        outFile << "<h3>BANG TONG HOP LO HANG</h3>\n";
+        outFile << "<table>\n";
+        outFile << "  <tr>\n";
+        outFile << "    <th>Ma lo hang</th>\n";
+        outFile << "    <th>Ten san pham</th>\n";
+        outFile << "    <th>Trang thai</th>\n";
+        outFile << "    <th>Nhiet do cuoi (C)</th>\n";
+        outFile << "    <th>So lan vi pham</th>\n";
+        outFile << "    <th>Vi tri (Lat, Lon)</th>\n";
+        outFile << "  </tr>\n";
+
+        for(const auto& item : history){
+            bool hasViolation = item.getViolationCount() > 0;
+            if (hasViolation) {
+                outFile << "  <tr class=\"alert\">\n";
+            } else {
+                outFile << "  <tr>\n";
+            }
+            
+            outFile << "    <td>" << item.getShipmentId() << "</td>\n";
+            outFile << "    <td>" << item.getProductName() << "</td>\n";
+            outFile << "    <td>" << item.getStatus() << "</td>\n";
+            outFile << "    <td>" << fixed << setprecision(1) << item.getLastRecordedTemp() << "</td>\n";
+            outFile << "    <td>" << item.getViolationCount() << "</td>\n";
+            outFile << "    <td>" << fixed << setprecision(4) 
+                    << item.getLastLocation().getLatitude() << ", " 
+                    << item.getLastLocation().getLongitude() << "</td>\n";
+            outFile << "  </tr>\n";
+        }
+        outFile << "</table>\n";
+        outFile << "<h3>BANG DU LIEU BIEN DONG NHIET DO (SERIES DATA FOR CHART)</h3>\n";
+        outFile << "<table>\n";
+        outFile << "  <tr class=\"sub-header\">\n";
+        outFile << "    <th>Ma lo hang</th>\n";
+        outFile << "    <th>Ten san pham</th>\n";
+        outFile << "    <th>Lan do (Step)</th>\n";
+        outFile << "    <th>Thoi gian</th>\n";
+        outFile << "    <th>Nhiet do do (C)</th>\n";
+        outFile << "    <th>Nguong Min (C)</th>\n";
+        outFile << "    <th>Nguong Max (C)</th>\n";
+        outFile << "    <th>Kich ban (Scenario)</th>\n";
+        outFile << "  </tr>\n";
+
+        for(const auto& item : history){
+            int step = 1;
+            for(const auto& tele : item.getTelemetryHistory()){
+                bool isViolated = (tele.getTemperature() < item.getMinTemp() || tele.getTemperature() > item.getMaxTemp());
+                if (isViolated) {
                     outFile << "  <tr class=\"alert\">\n";
                 } else {
                     outFile << "  <tr>\n";
                 }
-                
+
                 outFile << "    <td>" << item.getShipmentId() << "</td>\n";
                 outFile << "    <td>" << item.getProductName() << "</td>\n";
-                outFile << "    <td>" << item.getStatus() << "</td>\n";
-                outFile << "    <td>" << fixed << setprecision(1) << item.getLastRecordedTemp() << "</td>\n";
-                outFile << "    <td>" << item.getViolationCount() << "</td>\n";
-                outFile << "    <td>" << fixed << setprecision(4) 
-                        << item.getLastLocation().getLatitude() << ", " 
-                        << item.getLastLocation().getLongitude() << "</td>\n";
+                outFile << "    <td>" << step++ << "</td>\n";
+                outFile << "    <td>" << tele.getTimestamp() << "</td>\n";
+                outFile << "    <td>" << fixed << setprecision(1) << tele.getTemperature() << "</td>\n";
+                outFile << "    <td>" << fixed << setprecision(1) << item.getMinTemp() << "</td>\n";
+                outFile << "    <td>" << fixed << setprecision(1) << item.getMaxTemp() << "</td>\n";
+                outFile << "    <td>" << tele.getScenarioName() << "</td>\n";
                 outFile << "  </tr>\n";
             }
-
-            outFile << "</table>\n";
-            outFile << "</body>\n";
-            outFile << "</html>\n";
-
-            outFile.close();
-            return true; 
         }
+        outFile << "</table>\n";
+
+        outFile << "</body>\n";
+        outFile << "</html>\n";
+
+        outFile.close();
+        return true; 
+    }
 };
 
 // Danh sach canh bao mat an toan

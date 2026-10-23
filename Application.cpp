@@ -54,6 +54,7 @@ private:
     Location lastLocation; 
     float minTemp;
     float maxTemp; 
+    vector<TelemetryLog> telemetryHistory; 
 
 public:
     ShipmentDTO() {
@@ -63,7 +64,7 @@ public:
         maxTemp = 0.0f; 
     }
 
-    ShipmentDTO(int id, string prod, string st, float lastTemp, int violations, Location loc = Location(), float minT= 0.0f, float maxT = 0.0f) {
+    ShipmentDTO(int id, string prod, string st, float lastTemp, int violations, Location loc = Location(), float minT= 0.0f, float maxT = 0.0f, vector<TelemetryLog> telemetry = {}) {
         shipmentId = id;
         productName = prod;
         status = st;
@@ -72,6 +73,7 @@ public:
         lastLocation = loc; 
         minTemp = minT; 
         maxTemp = maxT; 
+        telemetryHistory = telemetry; 
     }
 
     int getShipmentId() const { return shipmentId; }
@@ -82,6 +84,7 @@ public:
     Location getLastLocation() const {return lastLocation;}
     float getMinTemp() const {return minTemp;}
     float getMaxTemp() const {return maxTemp;}
+    const vector<TelemetryLog> getTelemetryHistory() const{return telemetryHistory;}
 };
 
 // Publisher quản lý danh sách Observers và phát sự kiện

@@ -111,6 +111,27 @@ class ColdContainer{
             return tempRange.isWithinRange(currentTemp); //kiem tra trong nguong 
         }  
 };
+// Log ghi nhật mọi điểm dữ liệu cảm biến (vẽ biểu đồ) 
+class TelemetryLog{
+    private: 
+        float temperature;
+        Location location; 
+        string timestamp; 
+        string scenarioName;
+    public: 
+        TelemetryLog(float temp, const Location& loc, const string& time, const string& scenario = "unknown"){
+            temperature = temp;
+            location = loc; 
+            timestamp = time; 
+            scenarioName = scenario; 
+        }
+
+        float getTemperature() const{ return temperature;}
+        Location getLocation() const{return location;}
+        string getTimestamp() const{return timestamp;}
+        string getScenarioName() const{return scenarioName;}
+};
+
 // Entity: Lô hàng ( chứa coldcontainer và violationLog) 
 class Shipment{
     private: 
@@ -121,6 +142,7 @@ class Shipment{
         ShipmentStatus status; 
         ColdContainer container; 
         vector<ViolationLog> violation; 
+        vector<TelemetryLog> telemetryHistory; 
     public:
         Shipment(int id=0, const string& name="", const string& send="", const string& rcv="", const ColdContainer& con=ColdContainer(), ShipmentStatus st=ShipmentStatus::CREATED){
             shipmentId = id; 
@@ -153,6 +175,8 @@ class Shipment{
 
         // Xử lý khi phát sinh event 
         bool processSensorData(float temp, const Location& loc, const string& timestamp, const string& scenarioName = "UNKNOWN"){
+            telemetryHistory.push_back(TelemetryLog(temp, loc, timestamp, scenarioName));
+
             bool isExceeded = !container.checkTemperature(temp) || (scenarioName != "Xe di chuyen binh thuong !");
 
             if(isExceeded){ //Neu vuot nguong thì đổi status và được thêm vào violation
