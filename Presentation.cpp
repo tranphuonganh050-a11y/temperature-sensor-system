@@ -141,11 +141,13 @@ public:
        
         auto history = shipmentService.getShipmentHistory();
         bool exists = false; 
+        string currentStatus = "";
         float minSafe = 0.0f, maxSafe = 0.0f; 
 
         for(const auto& item : history){
             if(item.getShipmentId() == maHang){
                 exists = true;
+                currentStatus - item.getStatus(); 
                 minSafe = item.getMinTemp(); 
                 maxSafe = item.getMaxTemp(); 
                 break; 
@@ -154,6 +156,10 @@ public:
         if (!exists){
             cout << "Khong tim thay lo hang ma: " << maHang << ". Vui long tao lo hang hoac kiem tra lai ma: \n ";
             return; //Dừng chạy 
+        }
+        if(currentStatus == "DELIVERED"){
+            cout << "Lo hang " << maHang << " da giao. Vui long chon lo hang khac de chay mocking: ";
+            return;  
         }
         MockSensor sensor("Sensor-01");
         int totalSteps = 6;
@@ -199,6 +205,9 @@ public:
         }
 
         cout << "HOAN THANH MO PHONG" << endl;
+        
+        //danh dau lo hang da giao 
+        shipmentService.markDelivered(maHang); 
 
         auto updateHistory = shipmentService.getShipmentHistory(); 
         int violationCount = 0; 

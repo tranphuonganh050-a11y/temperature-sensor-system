@@ -162,6 +162,9 @@ class Shipment{
             }
             return false;
         }
+        void addViolation(const ViolationLog& v){
+            violation.push_back(v);
+        }
 
 };
 // interface Repository: Lưu trữ và truy xuất dữ liệu lô hàng

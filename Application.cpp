@@ -105,17 +105,33 @@ private:
     IShipmentRepository* shipmentRepo; // Dependency Injection Repository
     EventPublisher* eventPublisher;     // Dependency Injection Publisher
 
-    // Hàm phụ trợ sinh mã tự động (Helper)
-    int generateUniqueId() {
-        static int counter = 1000;
-        return ++counter;
+    int generateUniqueId(){
+        static int counter = 1000; 
+        static bool initialized = false; 
+        if(!initialized && shipmentRepo != nullptr){
+            auto shipments = shipmentRepo->findAll();
+            for(const auto& s : shipments){
+                if(s.getShipmentId() > counter){
+                    counter = s.getShipmentId();
+                }
+            }
+            initialized = true; 
+        }
+        return ++counter; 
     }
-
 public:
     // Constructor tiếp nhận các thành phần qua con trỏ
     ShipmentService(IShipmentRepository* repo, EventPublisher* publisher)
         : shipmentRepo(repo), eventPublisher(publisher) {}
-
+    // danh dau da giao hang
+    void markDelivered(int shipmentId){
+        if(shipmentRepo == nullptr) return; 
+        Shipment* shipment = shipmentRepo->findById(shipmentId);
+        if(shipment) {
+            shipment->markTransit(); // chuyen sang Delivered 
+            shipmentRepo->save(*shipment); 
+        }
+    }
     // 1. Nghiệp vụ: Tạo lô hàng mới từ DTO
     int createShipment(const CreateShipmentDTO& dto) {
         // Tạo Value Object & Entity con thuộc Domain

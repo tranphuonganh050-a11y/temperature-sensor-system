@@ -24,10 +24,112 @@ private:
             default: return "UNKNOWN";
         }
     }
+    //nap data tu file khi chay lai ct 
+    void loadFromFile(){
+        ifstream inFile(filePath);
+        if (!inFile.is_open()) return; 
+
+        inMemoryStore.clear(); 
+        string line; 
+        while(getline(inFile, line)){
+            stringstream ss(line); 
+            string type; 
+            getline(ss, type,  '|');
+
+            if(type == "SHIPMENT"){
+                string idStr, prod, sender, rcv, statusStr, containerIdStr, minStr, maxStr;
+                getline(ss, idStr, '|');
+                getline(ss, prod, '|');
+                getline(ss, sender, '|');
+                getline(ss, rcv, '|');
+                getline(ss, statusStr, '|');
+
+                int id = stoi(idStr); 
+                int containerId = 0;
+                float minTemp = 0.0f, maxTemp = 0.0f; 
+
+                if (getline(ss, containerIdStr, '|')) {
+                    containerId = stoi(containerIdStr);
+                    if (getline(ss, minStr, '|')) minTemp = stof(minStr);
+                    if (getline(ss, maxStr, '|')) maxTemp = stof(maxStr);
+                }
+
+                ShipmentStatus st = ShipmentStatus::CREATED;
+                if (statusStr == "IN_TRANSIT") st = ShipmentStatus::IN_TRANSIT;
+                else if (statusStr == "ALERTED") st = ShipmentStatus::ALERTED;
+                else if (statusStr == "DELIVERED") st = ShipmentStatus::DELIVERED;
+                else if (statusStr == "COMPROMISED") st = ShipmentStatus::COMPROMISED;
+
+                TemperatureRange range(minTemp, maxTemp);
+                ColdContainer container(containerId, "Standard-Model", range);
+                Shipment shipment(id, prod, sender, rcv, container, st);
+
+                bool found = false;
+                for (auto& s : inMemoryStore) {
+                    if (s.getShipmentId() == id) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    inMemoryStore.push_back(shipment);
+                } else {
+                    for (auto& s : inMemoryStore) {
+                        if (s.getShipmentId() == id) {
+                            auto existingViolations = s.getViolations();
+                            s = shipment;
+                            for (const auto& v : existingViolations) {
+                                s.addViolation(v);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (type == "VIOLATION") {
+                string idStr, timeStr, tempStr, locStr;
+                getline(ss, idStr, '|');
+                getline(ss, timeStr, '|');
+                getline(ss, tempStr, '|');
+                getline(ss, locStr, '|');
+
+                int id = stoi(idStr);
+                float temp = stof(tempStr);
+
+                float lat = 0.0f, lng = 0.0f;
+                size_t commaPos = locStr.find(',');
+                if (commaPos != string::npos) {
+                    lat = stof(locStr.substr(0, commaPos));
+                    lng = stof(locStr.substr(commaPos + 1));
+                }
+                Location loc(lat, lng);
+                ViolationLog v(temp, loc, timeStr);
+
+                for (auto& s : inMemoryStore) {
+                    if (s.getShipmentId() == id) {
+                        bool dup = false;
+                        for (const auto& existingV : s.getViolations()) {
+                            if (existingV.getTimestamp() == timeStr && existingV.getRecordedTemp() == temp) {
+                                dup = true;
+                                break;
+                            }
+                        }
+                        if (!dup) {
+                            s.addViolation(v);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        inFile.close();
+    }
+        
 
 public:
     FileShipmentRepository(const string& path = "LICH_SU_KIEM_TRA.txt"){
         filePath = path;
+        loadFromFile();
     }
 
     // Ghi trực tiếp thông tin lô hàng vào file
@@ -58,7 +160,10 @@ public:
                 << shipment.getProductName() << "|"
                 << shipment.getSender() << "|"
                 << shipment.getReceiver() << "|"
-                << statusToString(shipment.getStatus()) << "\n";
+                << statusToString(shipment.getStatus()) << "|"
+                << shipment.getContainer().getContainerId() << "|"
+                << shipment.getContainer().getTempRange().getMin() << "|"
+                << shipment.getContainer().getTempRange().getMax() << "\n";
 
         // Ghi danh sách vi phạm nhiệt độ (nếu có)
         for (const auto& v : shipment.getViolations())
