@@ -178,7 +178,7 @@ class ITemperatureObserver{
         virtual ~ITemperatureObserver() {}
         virtual void onTemperatureExceeded(const TemperatureExceededEvent& event) = 0;
 };
-/*
+
 class AlertService: public ITemperatureObserver{
     public: 
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
@@ -194,5 +194,5 @@ class DashboardNotifier: public ITemperatureObserver{
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{
         }
 };
-*/
+
 #endif

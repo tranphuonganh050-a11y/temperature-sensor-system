@@ -64,26 +64,50 @@ class AlertFeedLogger:public ITemperatureObserver{
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override {
             alertLogs.push_back(event);
         }
-        void displayAlertFeed() const{
-            cout << "\n==========================================================================" << endl;
+        void displayAlertFeed(const vector<ShipmentDTO>& shipmentHistory = {}) const{
+        cout << "\n==========================================================================" << endl;
         cout << "|                  DANH SACH CANH BAO (ALERT FEED)                        |" << endl;
         cout << "==========================================================================" << endl;
 
         if (alertLogs.empty()) {
             cout << "Khong co canh bao nao duoc ghi nhan.\n";
+            cout << "-----------------------------------------------------------------------\n" << endl;
             return;
         }
+        cout << left 
+             << "| " << setw(6) << "STT"
+             << "| " << setw(10) << "Ma mang" 
+             << "| " << setw(18) << "Ten san pham" 
+             << "| " << setw(18) << "Thoi gian" 
+             << "| " << setw(14) << "Toa do" 
+             << "| " << setw(10) << "Nhiet do" 
+             << "| " << setw(22) << "Canh bao" << " |" << endl;
+        cout << "-------------------------------------------------------------------------------" << endl;
 
         for (size_t i = 0; i < alertLogs.size(); ++i) {
             const auto& event = alertLogs[i];
-            // Render màu đỏ cho cảnh báo (\033[31m)
-            cout << "\033[31m"
-                 << "[" << i + 1 << "] [SU CO: " << event.getScenarioName() << "] "
-                 << "Moc thoi gian: " << event.getTimestamp() << " | "
-                 << "Lo hang: " << event.getShipmentId() << " | "
-                 << "Nhiet do vi pham: " << event.getExceededTemp() << " C (Nguong: " 
-                 << event.getSafeMin() << " - " << event.getSafeMax() << " C) | "
-                 << "Toa do: (" << event.getLocation().getLatitude() << ", " << event.getLocation().getLongitude() << ")"
+            
+            // Tìm tên sản phẩm dựa vào mã lô hàng từ lịch sử
+            string productName = "Unknown";
+            for (const auto& item : shipmentHistory) {
+                if (item.getShipmentId() == event.getShipmentId()) {
+                    productName = item.getProductName();
+                    break;
+                }
+            }
+
+            string coordStr = "(" + to_string(event.getLocation().getLatitude()).substr(0, 4) + ", " + 
+                              to_string(event.getLocation().getLongitude()).substr(0, 4) + ")";
+
+            // Render màu đỏ cho dòng cảnh báo
+            cout << "\033[31m" << left 
+                 << "| " << setw(6) << (to_string(i + 1))
+                 << "| " << setw(10) << event.getShipmentId()
+                 << "| " << setw(18) << productName
+                 << "| " << setw(18) << event.getTimestamp()
+                 << "| " << setw(14) << coordStr
+                 << "| " << setw(8) + string(" C") << (to_string(event.getExceededTemp()).substr(0, 4) + "C")
+                 << "| " << setw(22) << event.getScenarioName() << " |"
                  << "\033[0m" << endl;
         }
         cout << "--------------------------------------------------------------------------\n" << endl;
@@ -112,26 +136,6 @@ class DashboardView{
                  << "\033[0m";
             cout << "--------------------------------------------------" << endl;
         }
-    }
-        // Biểu đồ chuỗi thời gian đơn giản dạng Console Text Chart
-    void renderTimeSeriesChart(float currentTemp, float minSafe, float maxSafe){
-        cout << "\n--- BIEU DO CHUOI THOI GIAN (TIME-SERIES CHART) ---" << endl;
-        cout << "Upper Limit: " << maxSafe << " C | Lower Limit: " << minSafe << " C" << endl;
-        cout << "Nhiet do hien tai: " << currentTemp << " C  -> Graph: [";
-        
-        int barLength = static_cast<int>(currentTemp * 2);
-        if (barLength < 0) barLength = 0;
-        if (barLength > 40) barLength = 40;
-
-        bool isViolation = (currentTemp < minSafe || currentTemp > maxSafe);
-        string color = isViolation ? "\033[31m" : "\033[32m";
-
-        cout << color;
-        for (int i = 0; i < barLength; ++i) cout << "|";
-        cout << "\033[0m";
-        
-        for (int i = barLength; i < 40; ++i) cout << " ";
-        cout << "]\n";
     }
 
 };

@@ -9,11 +9,9 @@ int main(){
 
     TelemetryProcessor telemetryProcessor; 
     // Tao cac observer 
-    /*
     AlertService alertService; 
     ShipmentAggregator aggregatorService; 
     DashboardNotifier dashboardNotifier; 
-    */ 
     // Đăng ký thêm Feed Logger vào telemetryProcessor sẵn có
     AlertFeedLogger alertFeedLogger;
 
@@ -21,8 +19,8 @@ int main(){
     telemetryProcessor.subscribe(&alertService);
     telemetryProcessor.subscribe(&aggregatorService);
     telemetryProcessor.subscribe(&dashboardNotifier);
+    */
     telemetryProcessor.subscribe(&alertFeedLogger);
-    */ 
     
     ShipmentService shipmentService(&repo, &telemetryProcessor); 
 
@@ -33,7 +31,7 @@ int main(){
     cout << "\n======== KET XUAT BAO CAO VA DASHBOARD GIAM SAT ========\n";
 
     // Khi cần xem danh sách cảnh báo (Alert Feed):
-    alertFeedLogger.displayAlertFeed();
+    alertFeedLogger.displayAlertFeed(shipmentService.getShipmentHistory ());
 
     // Khi cần xem bản đồ trạng thái màu sắc:
     DashboardView dashboard;
