@@ -7,13 +7,15 @@
 </x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
 <style>
   body { font-family: 'Segoe UI', Tahoma, sans-serif; }
-  table { border-collapse: collapse; width: 100%; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
   th, td { border: 1px solid #d9d9d9; padding: 8px 12px; text-align: center; }
   th { background-color: #1F4E78; color: white; font-weight: bold; }
+  .sub-header { background-color: #2F5597; color: white; font-weight: bold; }
   .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }
 </style>
 </head>
 <body>
+<h3>BANG TONG HOP LO HANG</h3>
 <table>
   <tr>
     <th>Ma lo hang</th>
@@ -53,7 +55,28 @@
     <td>DELIVERED</td>
     <td>37.0</td>
     <td>4</td>
-    <td>20.9375, 105.8365</td>
+    <td>20.9375, 105.8360</td>
+  </tr>
+  <tr class="alert">
+    <td>1005</td>
+    <td>Banh Donut LimLim </td>
+    <td>DELIVERED</td>
+    <td>9.6</td>
+    <td>4</td>
+    <td>20.9203, 105.7666</td>
+  </tr>
+</table>
+<h3>BANG DU LIEU BIEN DONG NHIET DO (SERIES DATA FOR CHART)</h3>
+<table>
+  <tr class="sub-header">
+    <th>Ma lo hang</th>
+    <th>Ten san pham</th>
+    <th>Lan do (Step)</th>
+    <th>Thoi gian</th>
+    <th>Nhiet do do (C)</th>
+    <th>Nguong Min (C)</th>
+    <th>Nguong Max (C)</th>
+    <th>Kich ban (Scenario)</th>
   </tr>
 </table>
 </body>

@@ -172,13 +172,23 @@ class Shipment{
                 status = ShipmentStatus::DELIVERED; 
             }
         }
-
+         // cập nhật trạng thái 
+        void finalStatus(){
+            int vCount = static_cast<int>(violation.size());
+            if (vCount == 0){
+                status = ShipmentStatus::DELIVERED; // Khong vi pham lan nao 
+            }
+            else if (vCount <= 3){
+                status = ShipmentStatus::ALERTED; // vi pham tu 1 den 3 lan --> Canh bao
+            }
+            else {
+                status = ShipmentStatus::COMPROMISED; // vi pham trn 3 lan --> Hong nang/Huy hang 
+            }
+        }
         // Xử lý khi phát sinh event 
         bool processSensorData(float temp, const Location& loc, const string& timestamp, const string& scenarioName = "UNKNOWN"){
-            telemetryHistory.push_back(TelemetryLog(temp, loc, timestamp, scenarioName));
 
             bool isExceeded = !container.checkTemperature(temp) || (scenarioName != "Xe di chuyen binh thuong !");
-
             if(isExceeded){ //Neu vuot nguong thì đổi status và được thêm vào violation
                 status = ShipmentStatus::ALERTED; 
                 violation.push_back(ViolationLog(temp,  loc, timestamp));

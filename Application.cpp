@@ -122,6 +122,7 @@ private:
         }
         return ++counter; 
     }
+
 public:
     // Constructor tiếp nhận các thành phần qua con trỏ
     ShipmentService(IShipmentRepository* repo, EventPublisher* publisher)
@@ -237,6 +238,14 @@ public:
         }
 
         return dtoList;
+    }
+    void finalSimulation(int shipmentId){
+        if(shipmentRepo == nullptr) return; 
+        Shipment* shipment = shipmentRepo->findById(shipmentId);
+        if(shipment != nullptr){
+            shipment->finalStatus(); // goi ham tu dong doi trang thai
+            shipmentRepo->save(*shipment); // luu vao bo dem 
+        }
     }
 };
 
