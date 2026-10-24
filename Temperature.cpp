@@ -14,15 +14,10 @@ int main(){
     // Đăng ký thêm Feed Logger vào telemetryProcessor sẵn có
     AlertFeedLogger alertFeedLogger;
 
-    /*
-    telemetryProcessor.subscribe(&alertService);
-    telemetryProcessor.subscribe(&aggregatorService);
-    telemetryProcessor.subscribe(&dashboardNotifier);
-    */
+
     telemetryProcessor.subscribe(&alertFeedLogger);
     
     ShipmentService shipmentService(&repo, &telemetryProcessor); 
-
     //Khởi tạo Presentatio và chạy chương trình
     ConsoleMenu menu(shipmentService);
     menu.displayMainMenu(); 
