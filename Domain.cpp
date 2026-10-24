@@ -109,26 +109,6 @@ class ViolationLog{ //ghi dấu vết vi phạm
         Location getLocation() const {return location;}
         string getTimestamp() const {return timestamp;}
 };
-// Entity: Thùng chứa hàng - được định danh qua ID 
-class ColdContainer{
-    private: 
-        int containerId; 
-        string model; 
-        TemperatureRange tempRange; // tempRange kieu TemperatureRange
-    public: 
-        ColdContainer(int id = 0, const string& mod = "", const TemperatureRange& range = TemperatureRange()){
-            containerId = id;
-            model = mod; 
-            tempRange = range; 
-        }
-        int getContainerId() const {return containerId;}
-        string getModel() const {return model;} 
-        TemperatureRange getTempRange() const {return tempRange;}
-        
-        bool checkTemperature(float currentTemp) const {
-            return tempRange.isWithinRange(currentTemp); //kiem tra trong nguong 
-        }  
-};
 // Log ghi nhật mọi điểm dữ liệu cảm biến (vẽ biểu đồ) 
 class TelemetryLog{
     private: 
@@ -149,6 +129,29 @@ class TelemetryLog{
         string getTimestamp() const{return timestamp;}
         string getScenarioName() const{return scenarioName;}
 };
+
+
+// Entity: Thùng chứa hàng - được định danh qua ID 
+class ColdContainer{
+    private: 
+        int containerId; 
+        string model; 
+        TemperatureRange tempRange; // tempRange kieu TemperatureRange
+    public: 
+        ColdContainer(int id = 0, const string& mod = "", const TemperatureRange& range = TemperatureRange()){
+            containerId = id;
+            model = mod; 
+            tempRange = range; 
+        }
+        int getContainerId() const {return containerId;}
+        string getModel() const {return model;} 
+        TemperatureRange getTempRange() const {return tempRange;}
+        
+        bool checkTemperature(float currentTemp) const {
+            return tempRange.isWithinRange(currentTemp); //kiem tra trong nguong 
+        }  
+};
+
 
 // Entity: Lô hàng ( chứa coldcontainer và violationLog) 
 class Shipment{
