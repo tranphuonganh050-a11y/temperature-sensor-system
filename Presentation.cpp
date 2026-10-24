@@ -70,7 +70,7 @@ public:
             {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "Loi! Vui long chi nhap SO!" << endl;
+                cout << "Loi! Vui long chi nhap so !" << endl;
                 continue;
             }
 
@@ -98,7 +98,7 @@ public:
                     break;
                 }
                 case 5:
-                    cout << "Chao tam biet!" << endl;
+                    cout << "Ket thuc chuong trinh !" << endl;
                     break;
                 default:
                     cout << "Lua chon khong co trong danh muc. Vui long chon lai!\n";

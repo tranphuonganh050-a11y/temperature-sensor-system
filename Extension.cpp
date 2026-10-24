@@ -141,14 +141,14 @@ class AlertFeedLogger:public ITemperatureObserver{
 
         const int TABLE_WIDTH = 105;
 
-        cout << "\n============================================================================================================" << endl;
-        cout << "|                                            DANH SACH CANH BAO                                               |" << endl;
-        cout << "=============================================================================================================" << endl;
+        cout << "\n=============================================================================================================================" << endl;
+        cout << "|                                                       DANH SACH CANH BAO                                                     |" << endl;
+        cout << "===============================================================================================================================" << endl;
         
         if (alertLogs.empty()) {
-            cout << "|                                  Khong co canh bao nao duoc ghi nhan                                        |" << endl;
-            cout << "=============================================================================================================" << endl;
-            return;
+            cout << "|                                               Khong co canh bao nao duoc ghi nhan                                            |" << endl;
+            cout << "===============================================================================================================================" << endl;
+            return; 
 
         }
 
@@ -160,7 +160,7 @@ class AlertFeedLogger:public ITemperatureObserver{
             << "| " << setw(22) << "Thoi gian" 
             << "| " << setw(16) << "Toa do" 
             << "| " << setw(10) << "Nhiet do" 
-            << "| " << setw(25) << "Canh bao" << " |" << endl;
+            << "| " << setw(25) << "Canh bao" << endl;
 
         string line(TABLE_WIDTH, '-');
         cout << line << endl;
@@ -197,7 +197,7 @@ class AlertFeedLogger:public ITemperatureObserver{
                 << "| " << setw(22) << event.getTimestamp()
                 << "| " << setw(16) << coordStr
                 << "| " << setw(10) << tempStr
-                << "| " << setw(25) << event.getScenarioName() << " |";
+                << "| " << setw(25) << event.getScenarioName();
 
             // Bọc màu đỏ ANSI quanh toàn bộ dòng đã được căn chỉnh chuẩn
             cout << "\033[31m" << rowSs.str() << "\033[0m" << endl;

@@ -8,9 +8,13 @@
 <style>
   body { font-family: 'Segoe UI', Tahoma, sans-serif; }
   table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
-  th, td { border: 1px solid #c6b0b0; padding: 8px 12px; text-align: center; }
+  th, td { border: 1px solid #9DC3E6; padding: 8px 12px; text-align: center; }
   th { background-color: #1F4E78; color: white; font-weight: bold; }
-  .sub-header { background-color: #2F5597; color: white; font-weight: bold; }
+  .row-odd td {background-color: #DDEBF7; }
+  .row-even td {background-color: #FFFFFF; }
+  .left {text-align: left; }
+  .center {text-align: center; }
+  .right {text-align: right; }
   .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }
 </style>
 </head>
@@ -144,18 +148,26 @@
     <td>6</td>
     <td>21.0461, 105.8367</td>
   </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>COMPROMISED</td>
+    <td>13.4</td>
+    <td>6</td>
+    <td>20.9657, 105.7688</td>
+  </tr>
 </table>
 <h3>BANG DU LIEU BIEN DONG NHIET DO </h3>
 <table>
   <tr class="sub-header">
     <th>Ma lo hang</th>
     <th>Ten san pham</th>
-    <th>Lan do (Step)</th>
+    <th>Lan do</th>
     <th>Thoi gian</th>
     <th>Nhiet do do (C)</th>
     <th>Nguong Min (C)</th>
     <th>Nguong Max (C)</th>
-    <th>Kich ban (Scenario)</th>
+    <th>Loai canh bao </th>
   </tr>
   <tr>
     <td>1006</td>
@@ -1076,6 +1088,76 @@
     <td>5.0</td>
     <td>8.0</td>
     <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr>
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>1</td>
+    <td>14:45:59 24/10/2026</td>
+    <td>4.0</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Khoi tao lo hang</td>
+  </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>2</td>
+    <td>14:46:06 24/10/2026</td>
+    <td>10.7</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>3</td>
+    <td>14:46:08 24/10/2026</td>
+    <td>11.8</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>4</td>
+    <td>14:46:10 24/10/2026</td>
+    <td>13.5</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Hong he thong lam lanh !</td>
+  </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>5</td>
+    <td>14:46:12 24/10/2026</td>
+    <td>11.5</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>6</td>
+    <td>14:46:14 24/10/2026</td>
+    <td>11.7</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Mo cua xe dot ngot !</td>
+  </tr>
+  <tr class="alert">
+    <td>1016</td>
+    <td>Cua hoang de</td>
+    <td>7</td>
+    <td>14:46:16 24/10/2026</td>
+    <td>13.4</td>
+    <td>3.0</td>
+    <td>5.0</td>
+    <td>Hong he thong lam lanh !</td>
   </tr>
 </table>
 </body>

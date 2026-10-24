@@ -22,7 +22,6 @@ int main(){
     ConsoleMenu menu(shipmentService);
     menu.displayMainMenu(); 
 
-    cout << "\n======== BAO CAO CANH BAO VI PHAM NHIET DO ========\n";
 
     // Khi cần xem danh sách cảnh báo (Alert Feed):
     alertFeedLogger.displayAlertFeed(shipmentService.getShipmentHistory ());
