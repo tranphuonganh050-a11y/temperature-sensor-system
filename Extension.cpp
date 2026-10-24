@@ -4,7 +4,6 @@
 #include "Application.cpp"
 #include <fstream>
 #include <sstream>
-#include <cmath>
 #include <iomanip> 
 using namespace std;
 
