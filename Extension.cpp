@@ -27,11 +27,11 @@ class AuditReportExporter{
             outFile.close();
             return true; 
         }
-            //Xuất dạng excel 
+            //Xuất dạng excel - html 
             static bool exportToExcel(const vector<ShipmentDTO>& history, const vector<TemperatureExceededEvent>& alertLogs ={}, const string& filename = "ColdChain_Compliance_Report.xls"){
         ofstream outFile(filename); 
         if(!outFile.is_open()) return false;
-
+        // giao diện mở trong file excel 
         outFile << "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">\n";
         outFile << "<head>\n";
         outFile << "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
@@ -39,18 +39,23 @@ class AuditReportExporter{
         outFile << "<x:Name>Bao Cao Lich Su</x:Name>\n";
         outFile << "<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>\n";
         outFile << "</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\n";
+        // css 
         outFile << "<style>\n";
         outFile << "  body { font-family: 'Segoe UI', Tahoma, sans-serif; }\n";
         outFile << "  table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }\n";
-        outFile << "  th, td { border: 1px solid #c6b0b0; padding: 8px 12px; text-align: center; }\n";
+        outFile << "  th, td { border: 1px solid #9DC3E6; padding: 8px 12px; text-align: center; }\n";
         outFile << "  th { background-color: #1F4E78; color: white; font-weight: bold; }\n";
-        outFile << "  .sub-header { background-color: #2F5597; color: white; font-weight: bold; }\n";
+        outFile << "  .row-odd td {background-color: #DDEBF7; }\n"; // xanh dương nhạt 
+        outFile << "  .row-even td {background-color: #FFFFFF; }\n";// trắng
+        outFile << "  .left {text-align: left; }\n";
+        outFile << "  .center {text-align: center; }\n";
+        outFile << "  .right {text-align: right; }\n";
         outFile << "  .alert { background-color: #FFC7CE; color: #9C0006; font-weight: bold; }\n";
         outFile << "</style>\n";
         outFile << "</head>\n";
         outFile << "<body>\n";
 
-       
+       // tiêu đề bảng (bảng tổng kết)
         outFile << "<table>\n";
         outFile << "  <tr>\n";
         outFile << "    <th>Ma lo hang</th>\n";
@@ -85,12 +90,12 @@ class AuditReportExporter{
         outFile << "  <tr class=\"sub-header\">\n";
         outFile << "    <th>Ma lo hang</th>\n";
         outFile << "    <th>Ten san pham</th>\n";
-        outFile << "    <th>Lan do (Step)</th>\n";
+        outFile << "    <th>Lan do</th>\n";
         outFile << "    <th>Thoi gian</th>\n";
         outFile << "    <th>Nhiet do do (C)</th>\n";
         outFile << "    <th>Nguong Min (C)</th>\n";
         outFile << "    <th>Nguong Max (C)</th>\n";
-        outFile << "    <th>Kich ban (Scenario)</th>\n";
+        outFile << "    <th>Loai canh bao </th>\n";
         outFile << "  </tr>\n";
 
         for(const auto& item : history){
@@ -136,14 +141,15 @@ class AlertFeedLogger:public ITemperatureObserver{
 
         const int TABLE_WIDTH = 105;
 
-        cout << "\n=========================================================================================" << endl;
-        cout << "|                             DANH SACH CANH BAO (ALERT FEED)                            |" << endl;
-        cout << "=========================================================================================" << endl;
-
+        cout << "\n============================================================================================================" << endl;
+        cout << "|                                            DANH SACH CANH BAO                                               |" << endl;
+        cout << "=============================================================================================================" << endl;
+        
         if (alertLogs.empty()) {
-            cout << "| Khong co canh bao nao duoc ghi nhan.                                                   |" << endl;
-            cout << "=========================================================================================" << endl;
+            cout << "|                                  Khong co canh bao nao duoc ghi nhan                                        |" << endl;
+            cout << "=============================================================================================================" << endl;
             return;
+
         }
 
         // In header của bảng
