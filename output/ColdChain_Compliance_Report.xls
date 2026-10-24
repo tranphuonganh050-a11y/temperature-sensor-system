@@ -136,9 +136,9 @@
     <td>1014</td>
     <td>Sua chua Vinamilk</td>
     <td>ALERTED</td>
-    <td>3.8</td>
+    <td>3.5</td>
     <td>3</td>
-    <td>21.0159, 105.7047</td>
+    <td>21.0583, 105.8230</td>
   </tr>
   <tr class="alert">
     <td>1015</td>
@@ -1020,6 +1020,66 @@
     <td>Xe di chuyen binh thuong !</td>
   </tr>
   <tr>
+    <td>1014</td>
+    <td>Sua chua Vinamilk</td>
+    <td>8</td>
+    <td>15:18:58 24/10/2026</td>
+    <td>3.7</td>
+    <td>2.0</td>
+    <td>5.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1014</td>
+    <td>Sua chua Vinamilk</td>
+    <td>9</td>
+    <td>15:19:00 24/10/2026</td>
+    <td>3.9</td>
+    <td>2.0</td>
+    <td>5.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1014</td>
+    <td>Sua chua Vinamilk</td>
+    <td>10</td>
+    <td>15:19:02 24/10/2026</td>
+    <td>3.4</td>
+    <td>2.0</td>
+    <td>5.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1014</td>
+    <td>Sua chua Vinamilk</td>
+    <td>11</td>
+    <td>15:19:05 24/10/2026</td>
+    <td>3.6</td>
+    <td>2.0</td>
+    <td>5.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1014</td>
+    <td>Sua chua Vinamilk</td>
+    <td>12</td>
+    <td>15:19:07 24/10/2026</td>
+    <td>3.4</td>
+    <td>2.0</td>
+    <td>5.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
+    <td>1014</td>
+    <td>Sua chua Vinamilk</td>
+    <td>13</td>
+    <td>15:19:09 24/10/2026</td>
+    <td>3.5</td>
+    <td>2.0</td>
+    <td>5.0</td>
+    <td>Xe di chuyen binh thuong !</td>
+  </tr>
+  <tr>
     <td>1015</td>
     <td>Tra sua socola</td>
     <td>1</td>
@@ -1134,7 +1194,7 @@
     <td>Cua hoang de</td>
     <td>5</td>
     <td>14:46:12 24/10/2026</td>
-    <td>11.5</td>
+    <td>11.6</td>
     <td>3.0</td>
     <td>5.0</td>
     <td>Mo cua xe dot ngot !</td>
