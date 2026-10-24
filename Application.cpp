@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <ctime> 
 #include "Domain.cpp"
 using namespace std;
 
@@ -25,9 +26,7 @@ public:
         minTemp = 0.0f;
         maxTemp = 0.0f;
     }
-
-    CreateShipmentDTO(string prod, string snd, string rcv,
-                      int cntId, float minT, float maxT) {
+    CreateShipmentDTO(string prod, string snd, string rcv, int cntId, float minT, float maxT) {
         productName = prod;
         sender = snd;
         receiver = rcv;
@@ -35,7 +34,6 @@ public:
         minTemp = minT;
         maxTemp = maxT;
     }
-
     string getProductName() const { return productName; }
     string getSender() const { return sender; }
     string getReceiver() const { return receiver; }
@@ -89,7 +87,7 @@ public:
 };
 
 // Publisher quản lý danh sách Observers và phát sự kiện
-class TelemetryProcessor { //la TelemetryProcessor trong yeu cau cua thay 
+class TelemetryProcessor { 
     private: 
         vector<ITemperatureObserver*> observers; 
     public: 
@@ -106,8 +104,8 @@ typedef TelemetryProcessor EventPublisher;
 
 class ShipmentService {
 private:
-    IShipmentRepository* shipmentRepo; // Dependency Injection Repository
-    EventPublisher* eventPublisher;     // Dependency Injection Publisher
+    IShipmentRepository* shipmentRepo; 
+    EventPublisher* eventPublisher;    
 
     int generateUniqueId(){
         int maxId = 1000; 
@@ -118,21 +116,20 @@ private:
         }
         return maxId + 1; 
     }
-
     static string currentTimeString(){
         time_t now = time(nullptr);
         tm* ltm = localtime(&now);
         char buf[32];
         strftime(buf, sizeof(buf), "%H:%M:%S %d/%m/%Y", ltm);
         return string(buf);
-
     }
-
 public:
     // Constructor tiếp nhận các thành phần qua con trỏ
-    ShipmentService(IShipmentRepository* repo, EventPublisher* publisher)
-        : shipmentRepo(repo), eventPublisher(publisher) {}
-    // danh dau da giao hang
+    ShipmentService(IShipmentRepository* repo, EventPublisher* publisher){
+            shipmentRepo = repo; 
+            eventPublisher = publisher; 
+        }
+    // Đánh dấu đã giao hàng <HÀM NÀY CHƯA ĐƯỢC DÙNG> 
     void markDelivered(int shipmentId){
         if(shipmentRepo == nullptr) return; 
         Shipment* shipment = shipmentRepo->findById(shipmentId);
@@ -141,49 +138,41 @@ public:
             shipmentRepo->save(*shipment); 
         }
     }
-    // 1. Nghiệp vụ: Tạo lô hàng mới từ DTO
+    //Tạo lô hàng mới từ DTO
     int createShipment(const CreateShipmentDTO& dto) {
         float minT = dto.getMinTemp(); 
         float maxT = dto.getMaxTemp(); 
         if(minT > maxT) swap(minT, maxT); // neu nhap nguoc thi tu dao lai 
-
-        // Tạo Value Object & Entity con thuộc Domain
-        TemperatureRange tempRange(dto.getMinTemp(), dto.getMaxTemp());
+        // chỉ swap 2 biến sao chép, trong DTO vẫn chưa swap --> khoảng an toàn vẫn bị đảo ngược
+        // Khắc phục: khởi tạo tempRange từ minT, maxT 
+        TemperatureRange tempRange(minT, maxT);
         ColdContainer container(dto.getContainerId(), "Standard-Model", tempRange);
 
-        // Sinh mã ID và khởi tạo Aggregate Root
         int newId = generateUniqueId();
         Shipment shipment(newId, dto.getProductName(), dto.getSender(), dto.getReceiver(), container);
 
-        // Bắt đầu trạng thái vận chuyển
         shipment.startTransit();
 
-        //tao nhiet do, toa do dau tien cho lo hang 
         float startTemp = (minT + maxT) /2.0f; 
         shipment.addTelemetry(TelemetryLog(startTemp, Location(21.0f, 105.08f), currentTimeString(), "Khoi tao lo hang"));
 
-        // Lưu thông qua Repository Pattern
-        if (shipmentRepo != nullptr) {
+        if (shipmentRepo != nullptr){
             shipmentRepo->save(shipment);
         }
-
         return newId;
     }
 
-    // 2. Nghiệp vụ: Tiếp nhận & xử lý dữ liệu cảm biến gửi về thời gian thực
-    void processSensorData(const int& shipmentId, float temp, Location loc, const string& time,const string& scenarioName = "UNKNOWN") {
-        if (shipmentRepo == nullptr) return;
+    //Tiếp nhận - xử lý dữ liệu cảm biến gửi về thời gian thực
+    bool processSensorData(const int& shipmentId, float temp, Location loc, const string& time,const string& scenarioName = "UNKNOWN") {
+        if (shipmentRepo == nullptr) return false;
 
-        // B1: Lấy lô hàng từ DB theo ID
         Shipment* shipment = shipmentRepo->findById(shipmentId);
         if (!shipment) {
             throw runtime_error("Khong tim thay lo hang voi ID: " + to_string(shipmentId));
         }
 
-        // B2: Gọi domain logic xử lý dữ liệu cảm biến
         bool isExceeded = shipment->processSensorData(temp, loc, time, scenarioName);
 
-        // B3: Kiểm tra nếu có vi phạm mới bùng phát -> Phát Domain Event ra ngoài
         if (isExceeded) {
             TemperatureRange range = shipment->getContainer().getTempRange();
 
@@ -196,35 +185,21 @@ public:
                 time,
                 scenarioName
             );
-
             if (eventPublisher != nullptr) {
-                eventPublisher->publish(event); // Bắn sự kiện tới Observers (Alert, UI...)
+                eventPublisher->publish(event);
             }
         }
-
-        // B4: Cập nhật lại dữ liệu lô hàng vào Database
         shipmentRepo->save(*shipment);
+        return isExceeded; 
     }
 
-    // 3. Nghiệp vụ: Lấy lịch sử tất cả lô hàng để hiển thị ra UI (Chuyển đổi Entity sang DTO)
     vector<ShipmentDTO> getShipmentHistory() {
         vector<ShipmentDTO> dtoList;
         if (shipmentRepo == nullptr) return dtoList;
 
-        // Lấy danh sách Entities từ Repository
         auto shipments = shipmentRepo->findAll();
 
-        // Map từ Entity Domain sang DTO UI
         for (const auto& shipment : shipments) {
-            string statusStr = "UNKNOWN";
-            switch (shipment.getStatus()) {
-                case ShipmentStatus::CREATED: statusStr = "CREATED"; break;
-                case ShipmentStatus::IN_TRANSIT: statusStr = "IN_TRANSIT"; break;
-                case ShipmentStatus::ALERTED: statusStr = "ALERTED"; break;
-                case ShipmentStatus::DELIVERED: statusStr = "DELIVERED"; break;
-                case ShipmentStatus::COMPROMISED: statusStr = "COMPROMISED"; break;
-            }
-
             int violationCount = static_cast<int>(shipment.getViolations().size());
             float lastTemp = 0.0f;
             Location lastLoc; 
@@ -234,7 +209,6 @@ public:
                 lastTemp = tele.back().getTemperature(); 
                 lastLoc = tele.back().getLocation(); 
             }
-
             TemperatureRange range = shipment.getContainer().getTempRange();
 
             ShipmentDTO dto(
@@ -251,7 +225,6 @@ public:
 
             dtoList.push_back(dto);
         }
-
         return dtoList;
     }
     void finalSimulation(int shipmentId){
@@ -263,5 +236,4 @@ public:
         }
     }
 };
-
 #endif

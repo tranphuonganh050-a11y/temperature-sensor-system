@@ -91,7 +91,7 @@ public:
                 case 4: {
                    bool isSuccess = AuditReportExporter::exportToCSV(shipmentService.getShipmentHistory());
                     if (isSuccess) {
-                        cout << "\nDa xuat du lieu: ColdChain_Compliance_Report.xls\n";
+                        cout << "\nDa xuat du lieu ra file Excel!\n";
                     } else {
                         cout << "\nKhong the xuat file Excel!\n";
                     }
@@ -130,7 +130,6 @@ public:
         lastCreatedShipmentId = shipmentService.createShipment(donHangMoi);
         cout << "Tao lo hang thanh cong. Ma lo hang: " << lastCreatedShipmentId << '\n'; 
     }
-
     // Mocking để tự động chạy nhiệt độ thay vì nhập vào
     void handleRunSensorSimulation()
     {
@@ -145,7 +144,6 @@ public:
         }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         
-       
         auto history = shipmentService.getShipmentHistory();
         const ShipmentDTO* found = nullptr;
         for (const auto& item : history) {
@@ -154,7 +152,6 @@ public:
                 break;
             }
         }
-
         if(!found){
             cout << "Khong tim thay lo hang ma " << maHang << ". Vui long tao lo hang moi hoac kiem tra lai ma!\n";
             return; 
@@ -192,10 +189,9 @@ public:
         
             try
             {   
-                bool isViolated = (temp < minSafe || temp > maxSafe);
-                // Gọi Application xử lý dữ liệu và bắn cảnh báo vi phạm
-
+                bool isViolated = shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
                 shipmentService.processSensorData(maHang, temp, loc, timestamp, scenarioName);
+
                 if(isViolated) ++violationsThisRun; 
 
                 cout << "| Mock: " << step << endl; 
@@ -233,7 +229,8 @@ public:
                 break; 
             }
         }
-            cout << "Lo hang " << maHang << " vi pham nhiet do " << violationCount << " lan" << endl; 
+        cout << "Luot mo phong nay co " << violationsThisRun << " lan vi pham. " << endl; 
+        cout << "Lo hang " << maHang << " vi pham nhiet do tong cong " << violationCount << " lan" << endl; 
         if(AuditReportExporter::exportToExcel(shipmentService.getShipmentHistory())){
             cout << "Da xuat du lieu!" << endl; 
         }

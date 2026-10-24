@@ -48,7 +48,6 @@ class TemperatureRange{
             return (temp >= minTemp) && (temp <= maxTemp);
         }
 };
-
 //Value object: Tọa độ xe vận chuyển 
 class Location{
     private: 
@@ -63,7 +62,6 @@ class Location{
         float getLongitude() const {return longitude;}
 
 };
-
 // Su kien vi pham nhiet do 
 class TemperatureExceededEvent{
     private: 
@@ -92,9 +90,8 @@ class TemperatureExceededEvent{
         string getTimestamp() const {return timestamp;}
         string getScenarioName() const {return scenarioName;}
 };
-
 // Log vi phạm: ghi lại các sự kiện vi phạm nhiệt độ 
-class ViolationLog{ //ghi dấu vết vi phạm 
+class ViolationLog{ 
     private: 
         float recordedTemp; 
         Location location;
@@ -109,7 +106,7 @@ class ViolationLog{ //ghi dấu vết vi phạm
         Location getLocation() const {return location;}
         string getTimestamp() const {return timestamp;}
 };
-// Log ghi nhật mọi điểm dữ liệu cảm biến (vẽ biểu đồ) 
+// Log ghi nhật mọi điểm dữ liệu cảm biến
 class TelemetryLog{
     private: 
         float temperature;
@@ -129,14 +126,12 @@ class TelemetryLog{
         string getTimestamp() const{return timestamp;}
         string getScenarioName() const{return scenarioName;}
 };
-
-
-// Entity: Thùng chứa hàng - được định danh qua ID 
+// Thùng chứa hàng - được định danh qua ID 
 class ColdContainer{
     private: 
         int containerId; 
         string model; 
-        TemperatureRange tempRange; // tempRange kieu TemperatureRange
+        TemperatureRange tempRange; 
     public: 
         ColdContainer(int id = 0, const string& mod = "", const TemperatureRange& range = TemperatureRange()){
             containerId = id;
@@ -151,9 +146,7 @@ class ColdContainer{
             return tempRange.isWithinRange(currentTemp); //kiem tra trong nguong 
         }  
 };
-
-
-// Entity: Lô hàng ( chứa coldcontainer và violationLog) 
+//Lô hàng (chứa coldcontainer và violationLog) 
 class Shipment{
     private: 
         int shipmentId;
@@ -211,7 +204,6 @@ class Shipment{
         bool processSensorData(float temp, const Location& loc, const string& timestamp, const string& scenarioName = "UNKNOWN"){
         
             telemetryHistory.push_back(TelemetryLog(temp, loc, timestamp, scenarioName));
-
         
             bool isExceeded = !container.checkTemperature(temp);
             if(isExceeded){ //Neu vuot nguong thì đổi status và được thêm vào violation
@@ -237,13 +229,11 @@ class IShipmentRepository{
         virtual Shipment* findById(const int& shipmentId) = 0; 
         virtual vector<Shipment> findAll() = 0; 
 };
-
 class ITemperatureObserver{
     public: 
         virtual ~ITemperatureObserver() {}
         virtual void onTemperatureExceeded(const TemperatureExceededEvent& event) = 0;
 };
-
 class AlertService: public ITemperatureObserver{
     public: 
         void onTemperatureExceeded(const TemperatureExceededEvent& event) override{

@@ -77,7 +77,6 @@ private:
                     getline(ss, tempStr, '|');
                     getline(ss, locStr, '|');
                     
-
                     Shipment* s = findById(stoi(idStr));
                     if (s) s->addViolation(ViolationLog(stof(tempStr), parseLocation(locStr), timeStr));
                 }
@@ -92,8 +91,11 @@ private:
                     Shipment* s = findById(stoi(idStr));
                     if (s) s->addTelemetry(TelemetryLog(stof(tempStr), parseLocation(locStr), timeStr, scenario));
                 }
-            } catch (...) {
-                continue;  // dòng lỗi -> bỏ qua
+            }
+            catch (const exception& e)
+            {
+                cout << "Exception: " << e.what() << endl;
+                continue;
             }
         }
         inFile.close();
@@ -120,16 +122,16 @@ private:
             for (const auto& v : shipment.getViolations()) {
                 outFile << "VIOLATION|" << shipment.getShipmentId() << "|"
                         << v.getTimestamp() << "|"
-                        << fixed << setprecision(2) << v.getRecordedTemp() << "|"
-                        << fixed << setprecision(4) << v.getLocation().getLatitude() << ","
+                        << fixed <<  v.getRecordedTemp() << "|"
+                        << fixed <<  v.getLocation().getLatitude() << ","
                         << v.getLocation().getLongitude() << "\n";
             }
 
             for (const auto& t : shipment.getTelemetryHistory()) {
                 outFile << "TELEMETRY|" << shipment.getShipmentId() << "|"
                         << t.getTimestamp() << "|"
-                        << fixed << setprecision(2) << t.getTemperature() << "|"
-                        << fixed << setprecision(4) << t.getLocation().getLatitude() << ","
+                        << fixed <<  t.getTemperature() << "|"
+                        << fixed <<  t.getLocation().getLatitude() << ","
                         << t.getLocation().getLongitude() << "|"
                         << t.getScenarioName() << "\n";
             }
@@ -142,7 +144,6 @@ public:
         filePath = path;
         loadFromFile();
     }
-
     void save(const Shipment& shipment) override {
         // Cập nhật bộ đệm: có rồi thì thay, chưa có thì thêm
         Shipment* existing = findById(shipment.getShipmentId());
@@ -153,39 +154,22 @@ public:
         }
         writeAllToFile();
     }
-
     Shipment* findById(const int& shipmentId) override {
         for (auto& shipment : inMemoryStore) {
             if (shipment.getShipmentId() == shipmentId) return &shipment;
         }
         return nullptr;
     }
-
     vector<Shipment> findAll() override {
         return inMemoryStore;
     }
-
-    // In nguyên file lịch sử ra màn hình
-    void displayHistoryFromFile() {
-        ifstream inFile(filePath);
-        if (!inFile.is_open()) {
-            cout << "Chua co lich su kiem tra\n";
-            return;
-        }
-        cout << "\n===== LICH SU KIEM TRA ===============\n";
-        string line;
-        while (getline(inFile, line)) cout << line << '\n';
-        cout << "=========================================\n";
-    }
 };
-
 // Các kịch bản mô phỏng
 enum class SimulationScenario {
     NORMAL,           // xe di chuyển bình thường
     COOLING_FAILURE,  // hỏng hệ thống làm lạnh (nhiệt độ tăng dần)
     DOOR_OPEN         // mở cửa xe đột ngột (nhiệt độ tăng vọt)
 };
-
 class MockSensor {
 private:
     string SensorID;
@@ -207,7 +191,7 @@ private:
 
 public:
     MockSensor(string id = "Sensor_01", string cId = "Container_01", float initialTemp = 4.0f)
-        : SensorID(id), containerID(cId), currentTemp(initialTemp), rng(random_device{}()) {}
+        : SensorID(id), containerID(cId), currentTemp(initialTemp), rng(random_device{}()){}
 
     //chọn ngẫu nhiên số bước lỗi và vị trí bước lỗi tương ứng.
     vector<SimulationScenario> planRun(int totalSteps) const {
@@ -223,8 +207,7 @@ public:
         iota(idx.begin(), idx.end(), 0);
         shuffle(idx.begin(), idx.end(), rng);
         for (int i = 0; i < faults; ++i) {
-            plan[idx[i]] = (randomInt(0, 1) == 0) ? SimulationScenario::COOLING_FAILURE
-                                                  : SimulationScenario::DOOR_OPEN;
+            plan[idx[i]] = (randomInt(0, 1) == 0) ? SimulationScenario::COOLING_FAILURE: SimulationScenario::DOOR_OPEN;
         }
         return plan;
     }
@@ -239,11 +222,11 @@ public:
                 currentTemp = mid + randomFloat(-noiseLimit, noiseLimit);
                 break;
             case SimulationScenario::COOLING_FAILURE:
-                currentTemp += randomFloat(1.0f, 2.0f);                       // tăng dần
+                currentTemp += randomFloat(1.0f, 2.0f);           // tăng dần
                 if (currentTemp <= maxTemp) currentTemp = maxTemp + randomFloat(0.5f, 1.5f);
                 break;
             case SimulationScenario::DOOR_OPEN:
-                currentTemp = maxTemp + randomFloat(4.0f, 8.0f);              // tăng vọt
+                currentTemp = maxTemp + randomFloat(4.0f, 8.0f);   // tăng vọt
                 break;
         }
         return currentTemp;
@@ -257,9 +240,6 @@ public:
         }
         return "UNKNOWN";
     }
-
-    float readHumidity() const { return randomFloat(45.0f, 85.0f); }
-
     Location readCurrentLocation() const {
         return Location(randomFloat(20.9f, 21.1f), randomFloat(105.7f, 105.9f));  // giả lập quanh Hà Nội
     }
